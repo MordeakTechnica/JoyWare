@@ -1,0 +1,69 @@
+# ==============================================================================
+# MordeakTechnica - Common Base Cyberware Record
+# ==============================================================================
+
+Items.MordeakTechnicaBase:
+  $type: gamedataItem_Record
+  cyberwareType: EnhancedBlood
+  displayName: LocKey#40742
+  equipArea: EquipmentArea.HandsCW
+  iconPath: cw_hands_smartlink
+  nextUpgradeItem: None
+  OnEquip: []
+  quality: Quality.Common
+  slotPartListPreset:
+    - Items.GenericItemRootPreset
+  statModifiers:
+    - Items.ItemArmorToArmor
+    - Quality.IconicItem
+  variants: []
+  animFeatureName: ItemData
+  animName: ui_garment_pose
+  animSetResource: ''
+  blueprint: Items.GenericShardableCyberwareBlueprint
+  canDrop: True
+  crosshair: Crosshairs.None
+  deprecated: False
+  enableNpcRPGData: False
+  friendlyName: ''
+  garmentOffset: 0
+  icon: UIIcon.ItemIcon
+  isCached: False
+  isCoreCW: True
+  isCustomizable: False
+  isGarment: False
+  isPart: False
+  isSingleInstance: False
+  itemCategory: ItemCategory.Cyberware
+  itemType: ItemType.Cyberware
+  localizedName: ''
+  mass: 1
+  minigameInstance: minigame_v2.DefaultItemMinigame
+  powerLevelDeterminedByParent: False
+  qualityRestrictedByParent: False
+  replicateWhenNotActive: False
+  upgradeCostMult: 2
+  useHeadgearGarmentAggregator: False
+  useNewSpawnMethod: False
+  usesVariants: True
+  savable: False
+  buyPrice:
+    - Price.BaseCyberwarePrice
+    - Price.ItemQualityMultiplier
+    - Price.PlusTierMultiplier
+    - Price.CyberwareMultiplier
+    - Price.BuyPrice_StreetCred_Discount
+  cameraForward: {x: 0, y: 0, z: 0}
+  cameraUp: {x: 0, y: 0, z: 0}
+  gameplayRestrictions:
+    - GameplayRestriction.VehicleCombatNoInterruptions
+  localizedDescription: ''
+  sellPrice:
+    - Price.BaseCyberwarePrice
+    - Price.ItemQualityMultiplier
+    - Price.PlusTierMultiplier
+    - Price.CyberwareMultiplier
+    - Price.CyberwareSellMultiplier
+  tags:
+    - Cyberware
+    - HideInBackpackUI

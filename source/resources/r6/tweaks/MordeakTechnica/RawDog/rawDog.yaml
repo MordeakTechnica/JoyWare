@@ -1,0 +1,97 @@
+# ==============================================================================
+# RawDog — Cardiovascular System (Circulatory Slot) Cyberware
+# ==============================================================================
+
+$: &RawDogStats
+  - { tier: Common,            nextTier: RawDog.RawDogCommonPlus,        healthAddition: 10, regenAddition: 1,  resistAddition: 5,  cyberwareCost: 5  }
+  - { tier: CommonPlus,        nextTier: RawDog.RawDogUncommon,          healthAddition: 15, regenAddition: 2,  resistAddition: 6,  cyberwareCost: 5  }
+  - { tier: Uncommon,          nextTier: RawDog.RawDogUncommonPlus,      healthAddition: 20, regenAddition: 3,  resistAddition: 8,  cyberwareCost: 6  }
+  - { tier: UncommonPlus,      nextTier: RawDog.RawDogRare,              healthAddition: 25, regenAddition: 4,  resistAddition: 9,  cyberwareCost: 6  }
+  - { tier: Rare,              nextTier: RawDog.RawDogRarePlus,          healthAddition: 30, regenAddition: 5,  resistAddition: 11, cyberwareCost: 7  }
+  - { tier: RarePlus,          nextTier: RawDog.RawDogEpic,              healthAddition: 35, regenAddition: 6,  resistAddition: 13, cyberwareCost: 7  }
+  - { tier: Epic,              nextTier: RawDog.RawDogEpicPlus,          healthAddition: 40, regenAddition: 7,  resistAddition: 15, cyberwareCost: 8  }
+  - { tier: EpicPlus,          nextTier: RawDog.RawDogLegendary,         healthAddition: 45, regenAddition: 8,  resistAddition: 16, cyberwareCost: 8  }
+  - { tier: Legendary,         nextTier: RawDog.RawDogLegendaryPlus,     healthAddition: 50, regenAddition: 9,  resistAddition: 18, cyberwareCost: 9  }
+  - { tier: LegendaryPlus,     nextTier: RawDog.RawDogLegendaryPlusPlus, healthAddition: 55, regenAddition: 10, resistAddition: 19, cyberwareCost: 9  }
+  - { tier: LegendaryPlusPlus, nextTier: None,                           healthAddition: 60, regenAddition: 11, resistAddition: 20, cyberwareCost: 10 }
+
+# Humanity cost variant (2.0+ standard)
+Variants.RawDog$(tier)HumanityCost:
+  $instances: *RawDogStats
+  $type: gamedataRandomVariant_Record
+  weight: 1
+  statModifiers:
+    - $type: gamedataConstantStatModifier_Record
+      value: $(cyberwareCost)
+      modifierType: Additive
+      statType: BaseStats.HumanityAllocated
+  variantPrereqs:
+    - $type: gamedataStatPrereq_Record
+      comparisonType: GreaterOrEqual
+      notifyOnAnyChange: False
+      notifyOnlyOnStateFulfilled: False
+      objectToCheck: Owner
+      statType: HumanityAvailable
+      valueToCheck: 0
+      prereqClassName: StatPrereq
+      statModifiers:
+        - $type: gamedataConstantStatModifier_Record
+          value: $(cyberwareCost)
+          modifierType: Additive
+          statType: BaseStats.GenericStatPrereqValue
+
+RawDog.RawDog$(tier):
+  $instances: *RawDogStats
+  $base: Items.MordeakTechnicaBase
+  quality: Quality.$(tier)
+  displayName: LocKey#rawdog_rawdog_name
+  equipArea: EquipmentArea.CardiovascularSystemCW
+  cyberwareType: EnhancedBlood
+  variants:
+    - !append Variants.RawDog$(tier)HumanityCost
+  icon:
+    atlasResourcePath: mordeak\mordeak_technica\ui\mordeak_technica_icon.inkatlas
+    atlasPartName: rawdog_icon
+  tags: ['Cyberware', 'HideInBackpackUI', 'CyberMonitor', 'ImmersiveCyberware.Biomon', 'NA.RawDog']
+  nextUpgradeItem: $(nextTier)
+  objectActions: []
+  OnEquip:
+    - !append
+      $type: gamedataGameplayLogicPackage_Record
+      stats:
+        - $type: gamedataConstantStatModifier_Record
+          modifierType: Additive
+          statType: BaseStats.HealthOutOfCombatRegenRateAdd
+          value: $(regenAddition)
+      UIData:
+        $type: gamedataGameplayLogicPackageUIData_Record
+        localizedDescription: LocKey#rawdog_rawdog_description
+        floatValues: [$(regenAddition)]
+    - !append
+      $type: gamedataGameplayLogicPackage_Record
+      UIData:
+        $type: gamedataGameplayLogicPackageUIData_Record
+        iconPath: UIIcon.Body
+        localizedName: LocKey#mordeak_attunement_body
+        localizedDescription: LocKey#rawdog_rawdog_attunement
+        floatValues: [2]
+        stats:
+          - BaseStats.AttunementHelper
+    - !append
+      $type: gamedataGameplayLogicPackage_Record
+      UIData:
+        $type: gamedataGameplayLogicPackageUIData_Record
+        localizedDescription: LocKey#rawdog_rawdog_flavor
+  statModifiers:
+    - !append Items.AdvancedCardiovascularSystemModule_inline0
+    - !append { $type: gamedataConstantStatModifier_Record, modifierType: Additive, statType: BaseStats.Health, value: $(healthAddition) }
+    - !append { $type: gamedataConstantStatModifier_Record, modifierType: Additive, statType: BaseStats.ThermalResistance, value: $(resistAddition) }
+    - !append { $type: gamedataConstantStatModifier_Record, modifierType: Additive, statType: BaseStats.ChemicalResistance, value: $(resistAddition) }
+    - !append
+      $type: gamedataCombinedStatModifier_Record
+      opSymbol: '*'
+      refObject: Player
+      refStat: BaseStats.Strength
+      statType: BaseStats.AttunementHelper
+      modifierType: Additive
+      value: 2

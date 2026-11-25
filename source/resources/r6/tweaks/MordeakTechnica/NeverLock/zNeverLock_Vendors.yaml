@@ -1,0 +1,82 @@
+# ==============================================================================
+# NeverLock Vendor Distribution by District
+# ==============================================================================
+
+# Westbrook: Japantown (Fingers / Finn Gerstatt) - Low tiers always in stock
+Vendors.wbr_jpn_ripperdoc_02:
+  itemStock:
+    - !append
+      $instances:
+        - { quality: Common }
+        - { quality: CommonPlus }
+      item: NeverLock.NeverLock$(quality)
+      quantity:
+        - Vendors.Always_Present
+
+# Watson: Kabuki (Charles Bucks) & Pacifica (Rony LaFleur)
+Vendors.$(vendor):
+  $instances:
+    - { vendor: wat_kab_ripperdoc_02 }
+    - { vendor: pac_wwd_ripperdoc_01 }
+  itemStock:
+    - !append
+      item: NeverLock.NeverLockCommon
+      quantity:
+        - Vendors.Always_Present
+    - !append
+      generationPrereqs:
+        - LootPrereqs.UncommonCWLevelAvailabilityAtVendor
+      item: NeverLock.NeverLockUncommon
+      quantity:
+        - Vendors.Always_Present
+
+# Badlands & Santo Domingo: Common, Uncommon, Rare
+Vendors.$(vendor):
+  $instances:
+    - { vendor: bls_ina_se1_ripperdoc_01 }
+    - { vendor: std_arr_ripperdoc_01 }
+  itemStock:
+    - !append
+      item: NeverLock.NeverLockCommon
+      quantity:
+        - Vendors.Always_Present
+    - !append
+      $instances:
+        - { quality: Uncommon }
+        - { quality: Rare }
+      generationPrereqs:
+        - LootPrereqs.$(quality)CWLevelAvailabilityAtVendor
+      item: NeverLock.NeverLock$(quality)
+      quantity:
+        - Vendors.Always_Present
+
+# Heywood: Uncommon, Rare, Epic
+Vendors.hey_spr_ripperdoc_01:
+  itemStock:
+    - !append
+      $instances:
+        - { quality: Uncommon }
+        - { quality: Rare }
+        - { quality: Epic }
+      generationPrereqs:
+        - LootPrereqs.$(quality)CWLevelAvailabilityAtVendor
+      item: NeverLock.NeverLock$(quality)
+      quantity:
+        - Vendors.Always_Present
+
+# City Center & Dogtown: Rare, Epic, Legendary
+Vendors.$(vendor):
+  $instances:
+    - { vendor: cct_dtn_ripdoc_01 }
+    - { vendor: cz_stadium_ripperdoc_01 }
+  itemStock:
+    - !append
+      $instances:
+        - { quality: Rare }
+        - { quality: Epic }
+        - { quality: Legendary }
+      generationPrereqs:
+        - LootPrereqs.$(quality)CWLevelAvailabilityAtVendor
+      item: NeverLock.NeverLock$(quality)
+      quantity:
+        - Vendors.Always_Present

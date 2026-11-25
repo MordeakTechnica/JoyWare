@@ -1,0 +1,109 @@
+# ==============================================================================
+# Velvet Touch — Hand Slot Stealth Cyberware (Cool-Attuned)
+# ==============================================================================
+
+$: &VelvetTouchStats
+  - { tier: Common,            nextTier: VelvetTouch.VelvetTouchCommonPlus,        stealthDmg: 0.15, stealthDisp: 15, detection: 0.05, detectionDisp: 5,  throwingDmg: 0.20, throwingDisp: 20, headshotPerCool: 0.010, coolDisp: 1.0, cyberwareCost: 5  }
+  - { tier: CommonPlus,        nextTier: VelvetTouch.VelvetTouchUncommon,          stealthDmg: 0.18, stealthDisp: 18, detection: 0.06, detectionDisp: 6,  throwingDmg: 0.24, throwingDisp: 24, headshotPerCool: 0.011, coolDisp: 1.1, cyberwareCost: 5  }
+  - { tier: Uncommon,          nextTier: VelvetTouch.VelvetTouchUncommonPlus,      stealthDmg: 0.21, stealthDisp: 21, detection: 0.08, detectionDisp: 8,  throwingDmg: 0.28, throwingDisp: 28, headshotPerCool: 0.013, coolDisp: 1.3, cyberwareCost: 6  }
+  - { tier: UncommonPlus,      nextTier: VelvetTouch.VelvetTouchRare,              stealthDmg: 0.24, stealthDisp: 24, detection: 0.09, detectionDisp: 9,  throwingDmg: 0.32, throwingDisp: 32, headshotPerCool: 0.014, coolDisp: 1.4, cyberwareCost: 6  }
+  - { tier: Rare,              nextTier: VelvetTouch.VelvetTouchRarePlus,          stealthDmg: 0.27, stealthDisp: 27, detection: 0.11, detectionDisp: 11, throwingDmg: 0.36, throwingDisp: 36, headshotPerCool: 0.016, coolDisp: 1.6, cyberwareCost: 7  }
+  - { tier: RarePlus,          nextTier: VelvetTouch.VelvetTouchEpic,              stealthDmg: 0.30, stealthDisp: 30, detection: 0.13, detectionDisp: 13, throwingDmg: 0.40, throwingDisp: 40, headshotPerCool: 0.017, coolDisp: 1.7, cyberwareCost: 7  }
+  - { tier: Epic,              nextTier: VelvetTouch.VelvetTouchEpicPlus,          stealthDmg: 0.34, stealthDisp: 34, detection: 0.15, detectionDisp: 15, throwingDmg: 0.46, throwingDisp: 46, headshotPerCool: 0.019, coolDisp: 1.9, cyberwareCost: 8  }
+  - { tier: EpicPlus,          nextTier: VelvetTouch.VelvetTouchLegendary,         stealthDmg: 0.37, stealthDisp: 37, detection: 0.16, detectionDisp: 16, throwingDmg: 0.50, throwingDisp: 50, headshotPerCool: 0.021, coolDisp: 2.1, cyberwareCost: 8  }
+  - { tier: Legendary,         nextTier: VelvetTouch.VelvetTouchLegendaryPlus,     stealthDmg: 0.40, stealthDisp: 40, detection: 0.18, detectionDisp: 18, throwingDmg: 0.54, throwingDisp: 54, headshotPerCool: 0.023, coolDisp: 2.3, cyberwareCost: 9  }
+  - { tier: LegendaryPlus,     nextTier: VelvetTouch.VelvetTouchLegendaryPlusPlus, stealthDmg: 0.42, stealthDisp: 42, detection: 0.19, detectionDisp: 19, throwingDmg: 0.57, throwingDisp: 57, headshotPerCool: 0.024, coolDisp: 2.4, cyberwareCost: 9  }
+  - { tier: LegendaryPlusPlus, nextTier: None,                                     stealthDmg: 0.45, stealthDisp: 45, detection: 0.20, detectionDisp: 20, throwingDmg: 0.60, throwingDisp: 60, headshotPerCool: 0.025, coolDisp: 2.5, cyberwareCost: 10 }
+
+# Humanity cost variant (2.0+ standard)
+Variants.VelvetTouch$(tier)HumanityCost:
+  $instances: *VelvetTouchStats
+  $type: gamedataRandomVariant_Record
+  weight: 1
+  statModifiers:
+    - $type: gamedataConstantStatModifier_Record
+      value: $(cyberwareCost)
+      modifierType: Additive
+      statType: BaseStats.HumanityAllocated
+  variantPrereqs:
+    - $type: gamedataStatPrereq_Record
+      comparisonType: GreaterOrEqual
+      notifyOnAnyChange: False
+      notifyOnlyOnStateFulfilled: False
+      objectToCheck: Owner
+      statType: HumanityAvailable
+      valueToCheck: 0
+      prereqClassName: StatPrereq
+      statModifiers:
+        - $type: gamedataConstantStatModifier_Record
+          value: $(cyberwareCost)
+          modifierType: Additive
+          statType: BaseStats.GenericStatPrereqValue
+
+VelvetTouch.VelvetTouch$(tier):
+  $instances: *VelvetTouchStats
+  $base: Items.MordeakTechnicaBase
+  quality: Quality.$(tier)
+  displayName: LocKey#mordeak_velvettouch_name
+  equipArea: EquipmentArea.HandsCW
+  cyberwareType: Handle
+  variants:
+    - !append Variants.VelvetTouch$(tier)HumanityCost
+  icon:
+    atlasResourcePath: mordeak\mordeak_technica\ui\mordeak_technica_icon.inkatlas
+    atlasPartName: velvet_touch_icon
+  tags: ['Cyberware', 'HideInBackpackUI', 'MordeakTechnica.VelvetTouch']
+  nextUpgradeItem: $(nextTier)
+  OnEquip:
+    - !append
+      $type: gamedataGameplayLogicPackage_Record
+      stats:
+        - $type: gamedataConstantStatModifier_Record
+          modifierType: Additive
+          statType: BaseStats.StealthHitDamageMultiplier
+          value: $(stealthDmg)
+        - $type: gamedataConstantStatModifier_Record
+          modifierType: Additive
+          statType: BaseStats.StealthThrowingMeleeDamageIncrease
+          value: $(throwingDmg)
+        - $type: gamedataConstantStatModifier_Record
+          modifierType: Additive
+          statType: BaseStats.DetectionSpeedDecrease
+          value: $(detection)
+      UIData:
+        $type: gamedataGameplayLogicPackageUIData_Record
+        localizedDescription: LocKey#mordeak_velvettouch_description
+        floatValues: [$(stealthDisp), $(throwingDisp), $(detectionDisp)]
+    - !append
+      $type: gamedataGameplayLogicPackage_Record
+      UIData:
+        $type: gamedataGameplayLogicPackageUIData_Record
+        iconPath: UIIcon.Cool
+        localizedName: LocKey#mordeak_attunement_cool
+        localizedDescription: LocKey#mordeak_velvettouch_attunement
+        floatValues: [$(coolDisp)]
+        stats:
+          - BaseStats.AttunementHelper
+    - !append
+      $type: gamedataGameplayLogicPackage_Record
+      UIData:
+        $type: gamedataGameplayLogicPackageUIData_Record
+        localizedDescription: LocKey#mordeak_velvettouch_flavor
+  statModifiers:
+    - !append Items.AdvancedHandsModule_inline0
+    - !append
+      $type: gamedataCombinedStatModifier_Record
+      opSymbol: '*'
+      refObject: Player
+      refStat: BaseStats.Cool
+      statType: BaseStats.HeadshotDamageMultiplier
+      modifierType: Additive
+      value: $(headshotPerCool)
+    - !append
+      $type: gamedataCombinedStatModifier_Record
+      opSymbol: '*'
+      refObject: Player
+      refStat: BaseStats.Cool
+      statType: BaseStats.AttunementHelper
+      modifierType: Additive
+      value: $(coolDisp)

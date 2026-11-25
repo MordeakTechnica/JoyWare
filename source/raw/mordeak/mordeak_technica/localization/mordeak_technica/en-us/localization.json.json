@@ -1,0 +1,188 @@
+{
+  "Header": {
+    "WolvenKitVersion": "8.19.0",
+    "WKitJsonVersion": "0.0.9",
+    "GameVersion": 2310,
+    "ExportedDateTime": "2026-07-31T17:49:06.1826882Z",
+    "DataType": "CR2W",
+    "ArchiveFileName": "C:\\Users\\Peter Taylor\\Desktop\\DollChip\\Mordeak Technica\\Mordeak Technica\\source\\raw\\mordeak\\mordeak_technica\\localization\\mordeak_technica\\en-us\\localization.json.json"
+  },
+  "Data": {
+    "Version": 195,
+    "BuildVersion": 0,
+    "RootChunk": {
+      "$type": "JsonResource",
+      "cookingPlatform": "PLATFORM_PC",
+      "root": {
+        "HandleId": "0",
+        "Data": {
+          "$type": "localizationPersistenceOnScreenEntries",
+          "entries": [
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "Body Attunement",
+              "maleVariant": "",
+              "primaryKey": "0",
+              "secondaryKey": "mordeak_attunement_body"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "Cool Attunement",
+              "maleVariant": "",
+              "primaryKey": "0",
+              "secondaryKey": "mordeak_attunement_cool"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "Intelligence Attunement",
+              "maleVariant": "",
+              "primaryKey": "0",
+              "secondaryKey": "mordeak_attunement_intelligence"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "RawDog",
+              "maleVariant": "",
+              "primaryKey": "0",
+              "secondaryKey": "rawdog_rawdog_name"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "\u003CRich color=\u0022#555555\u0022\u003ELegal Disclaimer: Compatible with all major Ripperdoc-certified companion packages. Side effects may include: peace of mind, plausible deniability, and a noticeably shorter guest list at your funeral.\u003C/\u003E",
+              "maleVariant": "",
+              "primaryKey": "0",
+              "secondaryKey": "rawdog_rawdog_flavor"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "\u003CRich color=\u0022#FF1493\u0022 style=\u0022Semi-Bold\u0022\u003E\"Love is a transaction. We just made sure you collect on it.\"\u003C/\u003E\n\nRawDog doesn't ask who, what, or how many. Operating silently under the hood, this high-grade prophylactic suite instantly sterilizes bio-hazards and toxic encounters so you don't wake up with a countdown clock nobody installed on purpose. Call it discretion, call it insurance — in a city run on friction, safe is the new lethal.\n\n\u003CRich color=\u0022TooltipText.cyberwareDescriptionHighlightColor\u0022 style=\u0022Semi-Bold\u0022\u003E\u002B{float_0}%\u003C/\u003E Out Of Combat Health Regen Rate",
+              "maleVariant": "",
+              "primaryKey": "0",
+              "secondaryKey": "rawdog_rawdog_description"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "\u003CRich color=\u0022TooltipText.cyberwareDescriptionHighlightColor\u0022 style=\u0022Semi-Bold\u0022\u003E\u002B{float_0}%\u003C/\u003E Out Of Combat Health Regen Rate per Attribute Point in Body.\\nCurrent total: \u003CRich color=\u0022TooltipText.cyberwareDescriptionHighlightColor\u0022 style=\u0022Semi-Bold\u0022\u003E\u002B{stat_0}%\u003C/\u003E",
+              "maleVariant": "",
+              "primaryKey": "0",
+              "secondaryKey": "rawdog_rawdog_attunement"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "Velvet Touch",
+              "maleVariant": "",
+              "primaryKey": "0",
+              "secondaryKey": "mordeak_velvettouch_name"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "\u003CRich color=\u0022#555555\u0022\u003ELegal Disclaimer: MordeakTechnica is not liable for friction burns, joint hyperextension, or unintended discharge resulting from improper wrist technique or over-enthusiastic manual operation.\u003C/\u003E",
+              "maleVariant": "",
+              "primaryKey": "0",
+              "secondaryKey": "mordeak_velvettouch_flavor"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "\u003CRich color=\u0022#FF1493\u0022 style=\u0022Semi-Bold\u0022\u003E\"Why automate when you can handle it yourself?\"\u003C/\u003E\n\nBringing luxury dexterity to heavy manual labor, this palm co-processor pairs micro-lubricant reservoirs with variable pulse dampeners to eliminate grip fatigue entirely. Perfect for freelancers who prefer a quiet approach from behind and the steady, custom touch required to finish off any job smoothly.\n\n\u003CRich color=\u0022TooltipText.cyberwareDescriptionHighlightColor\u0022 style=\u0022Semi-Bold\u0022\u003E\u002B{float_0}%\u003C/\u003E Damage with Undetected \u0026 Stealth attacks.\n\u003CRich color=\u0022TooltipText.cyberwareDescriptionHighlightColor\u0022 style=\u0022Semi-Bold\u0022\u003E\u002B{float_1}%\u003C/\u003E Damage with Throwing Weapons from Stealth.\n\u003CRich color=\u0022TooltipText.cyberwareDescriptionHighlightColor\u0022 style=\u0022Semi-Bold\u0022\u003E-{float_2}%\u003C/\u003E Enemy Detection Speed.",
+              "maleVariant": "",
+              "primaryKey": "0",
+              "secondaryKey": "mordeak_velvettouch_description"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "\u003CRich color=\u0022TooltipText.cyberwareDescriptionHighlightColor\u0022 style=\u0022Semi-Bold\u0022\u003E\u002B{float_0}%\u003C/\u003E Headshot Damage Multiplier per Attribute Point in Cool.\\nCurrent total: \u003CRich color=\u0022TooltipText.cyberwareDescriptionHighlightColor\u0022 style=\u0022Semi-Bold\u0022\u003E\u002B{stat_0}%\u003C/\u003E",
+              "maleVariant": "",
+              "primaryKey": "0",
+              "secondaryKey": "mordeak_velvettouch_attunement"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "SmoothSkin",
+              "maleVariant": "",
+              "primaryKey": "0",
+              "secondaryKey": "mordeak_smoothskin_name"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "\u003CRich color=\u0022#555555\u0022\u003ELegal Disclaimer: MordeakTechnica is not responsible for emotional trauma, unpaid sessions, or broken client limbs resulting from unexpected resistance against the SmoothSkin polymer matrix.\u003C/\u003E",
+              "maleVariant": "",
+              "primaryKey": "0",
+              "secondaryKey": "mordeak_smoothskin_flavor"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "\u003CRich color=\u0022#FF1493\u0022 style=\u0022Semi-Bold\u0022\u003E\"Soft on top, tough underneath.\"\u003C/\u003E\n\nWhy choose between looking touchable and staying bulletproof? SmoothSkin delivers a satin-soft finish for discerning clientele while reactive subdermal plating automatically locks down the second physical boundaries are crossed—protecting your five-star rating and keeping your primary asset flawless no matter how messy the gig gets.\n\n\u003CRich color=\u0022TooltipText.cyberwareDescriptionHighlightColor\u0022 style=\u0022Semi-Bold\u0022\u003E\u002B{float_0}\u003C/\u003E Armor\n\u003CRich color=\u0022TooltipText.cyberwareDescriptionHighlightColor\u0022 style=\u0022Semi-Bold\u0022\u003E\u002B{float_1}%\u003C/\u003E Physical \u0026 Melee Damage Resistance\n\u003CRich color=\u0022TooltipText.cyberwareDescriptionHighlightColor\u0022 style=\u0022Semi-Bold\u0022\u003E\u002B{float_2}%\u003C/\u003E Mitigation Chance",
+              "maleVariant": "",
+              "primaryKey": "0",
+              "secondaryKey": "mordeak_smoothskin_description"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "\u003CRich color=\u0022TooltipText.cyberwareDescriptionHighlightColor\u0022 style=\u0022Semi-Bold\u0022\u003E\u002B{float_0}\u003C/\u003E Armor per Attribute Point in Body.\\nCurrent total: \u003CRich color=\u0022TooltipText.cyberwareDescriptionHighlightColor\u0022 style=\u0022Semi-Bold\u0022\u003E\u002B{stat_0}\u003C/\u003E",
+              "maleVariant": "",
+              "primaryKey": "0",
+              "secondaryKey": "mordeak_smoothskin_attunement"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "NeverLock",
+              "maleVariant": "",
+              "primaryKey": "0",
+              "secondaryKey": "mordeak_neverlock_name"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "\u003CRich color=\u0022#555555\u0022\u003ELegal Disclaimer: MordeakTechnica is not liable for jaw fatigue, lost teeth, or unfulfilled promises made during high-volume throat operations.\u003C/\u003E",
+              "maleVariant": "",
+              "primaryKey": "0",
+              "secondaryKey": "mordeak_neverlock_flavor"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "\u003CRich color=\u0022#FF1493\u0022 style=\u0022Semi-Bold\u0022\u003E\"Open wide for ultimate efficiency.\"\u003C/\u003E\n\nBring peak stamina to high-volume oral workloads with dual-pivot hydraulic dampeners that eliminate lockjaw, fatigue, and gag reflexes entirely. Equipped with reflex safeguards to prevent accidental clamping when overly ambitious clients get too hands-on, NeverLock ensures you stay wide open for business while seeing straight through every wall and firewall.\n\n\u003CRich color=\u0022TooltipText.cyberwareDescriptionHighlightColor\u0022 style=\u0022Semi-Bold\u0022\u003E{float_0}m\u003C/\u003E Optical scan distance to highlight enemies and threats behind walls and cover.\n\u003CRich color=\u0022TooltipText.cyberwareDescriptionHighlightColor\u0022 style=\u0022Semi-Bold\u0022\u003E\u002B{float_1}%\u003C/\u003E Hostile Quickhack Upload Time.\n\u003CRich color=\u0022TooltipText.cyberwareDescriptionHighlightColor\u0022 style=\u0022Semi-Bold\u0022\u003E\u002B{float_2}%\u003C/\u003E Quickhack Critical Hit Chance.",
+              "maleVariant": "",
+              "primaryKey": "0",
+              "secondaryKey": "mordeak_neverlock_description"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "\u003CRich color=\u0022TooltipText.cyberwareDescriptionHighlightColor\u0022 style=\u0022Semi-Bold\u0022\u003E\u002B{float_0}%\u003C/\u003E Quickhack Damage per Attribute Point in Intelligence.\\nCurrent total: \u003CRich color=\u0022TooltipText.cyberwareDescriptionHighlightColor\u0022 style=\u0022Semi-Bold\u0022\u003E\u002B{stat_0}%\u003C/\u003E",
+              "maleVariant": "",
+              "primaryKey": "0",
+              "secondaryKey": "mordeak_neverlock_attunement"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "DollChip",
+              "maleVariant": "",
+              "primaryKey": "0",
+              "secondaryKey": "mordeak_dollchip_name"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "\u003CRich color=\u0022#555555\u0022\u003ELegal Disclaimer: MordeakTechnica is not liable for brain damage, loss of consciousness, or poor choice of partner , or headache resulting from improper use.\u003C/\u003E",
+              "maleVariant": "",
+              "primaryKey": "0",
+              "secondaryKey": "mordeak_dollchip_flavor"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "\u003CRich color=\u0022#FF1493\u0022 style=\u0022Semi-Bold\u0022\u003E\u0022All the muscle memory, none of the memories.\u0022\u003C/\u003E\n\nMulticore DollChip engineering keeps the user calm while delivering reliable performance.\n\n\u003CRich color=\u0022TooltipText.cyberwareDescriptionHighlightColor\u0022 style=\u0022Semi-Bold\u0022\u003E\u002B{float_0}%\u003C/\u003E Quickhack Upload Time Decrease.",
+              "maleVariant": "",
+              "primaryKey": "0",
+              "secondaryKey": "mordeak_dollchip_description"
+            },
+            {
+              "$type": "localizationPersistenceOnScreenEntry",
+              "femaleVariant": "\u003CRich color=\u0022TooltipText.cyberwareDescriptionHighlightColor\u0022 style=\u0022Semi-Bold\u0022\u003E\u002B{float_0}%\u003C/\u003E Quickhack Upload Time Decrease per Intelligence point.\nCurrent total: \u003CRich color=\u0022TooltipText.cyberwareDescriptionHighlightColor\u0022 style=\u0022Semi-Bold\u0022\u003E\u002B{stat_0}%\u003C/\u003E",
+              "maleVariant": "",
+              "primaryKey": "0",
+              "secondaryKey": "mordeak_dollchip_attunement"
+            }
+          ]
+        }
+      }
+    },
+    "EmbeddedFiles": []
+  }
+}

@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<bindings>
+    <context name="MordeakDollChipHUD">
+        <action name="MordeakCyberwareHUDToggle" map="MordeakCyberwareHUDToggle" />
+    </context>
+
+    <context name="Exploration" append="true">
+        <include name="MordeakDollChipHUD" />
+    </context>
+
+    <context name="Scene" append="true">
+        <include name="MordeakDollChipHUD" />
+    </context>
+
+    <context name="VehicleDriveBase" append="true">
+        <include name="MordeakDollChipHUD" />
+    </context>
+
+    <context name="VehiclePassenger" append="true">
+        <include name="MordeakDollChipHUD" />
+    </context>
+
+    <acceptedEvents action="MordeakCyberwareHUDToggle">
+        <event name="BUTTON_PRESSED" />
+    </acceptedEvents>
+
+    <mapping name="MordeakCyberwareHUDToggle" type="Button">
+        <button id="IK_Y" />
+    </mapping>
+</bindings>

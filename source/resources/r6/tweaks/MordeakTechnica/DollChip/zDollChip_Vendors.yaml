@@ -1,0 +1,112 @@
+# ==============================================================================
+# DollChip Vendor Distribution by District
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# Westbrook: Japantown (Fingers / Finn Gerstatt)
+# Lowest quality only (Common & CommonPlus) - ALWAYS available regardless of player level!
+# ------------------------------------------------------------------------------
+Vendors.wbr_jpn_ripperdoc_02:
+  itemStock:
+    - !append
+      $instances:
+        - { quality: Common }
+        - { quality: CommonPlus }
+      item: DollChip.DollChip$(quality)
+      quantity:
+        - Vendors.Always_Present
+
+# ------------------------------------------------------------------------------
+# Watson: Kabuki (Charles Bucks)
+# Pacifica: West Wind Estate (Rony LaFleur)
+# Low-tier districts: Common (always available) & Uncommon (level unlocked)
+# ------------------------------------------------------------------------------
+Vendors.$(vendor):
+  $instances:
+    - { vendor: wat_kab_ripperdoc_02 }
+    - { vendor: pac_wwd_ripperdoc_01 }
+  itemStock:
+    - !append
+      item: DollChip.DollChipCommon
+      quantity:
+        - Vendors.Always_Present
+    - !append
+      generationPrereqs:
+        - LootPrereqs.UncommonCWLevelAvailabilityAtVendor
+      item: DollChip.DollChipUncommon
+      quantity:
+        - Vendors.Always_Present
+
+# ------------------------------------------------------------------------------
+# Badlands: Nomad Outskirts (Hutch Spindler)
+# Frontier stock: Common (always available), Uncommon and Rare (level unlocked)
+# ------------------------------------------------------------------------------
+Vendors.bls_ina_se1_ripperdoc_01:
+  itemStock:
+    - !append
+      item: DollChip.DollChipCommon
+      quantity:
+        - Vendors.Always_Present
+    - !append
+      $instances:
+        - { quality: Uncommon }
+        - { quality: Rare }
+      generationPrereqs:
+        - LootPrereqs.$(quality)CWLevelAvailabilityAtVendor
+      item: DollChip.DollChip$(quality)
+      quantity:
+        - Vendors.Always_Present
+
+# ------------------------------------------------------------------------------
+# Santo Domingo: Arroyo (Rafael Pérez)
+# Tier 2 (Uncommon) and Tier 3 (Rare)
+# ------------------------------------------------------------------------------
+Vendors.std_arr_ripperdoc_01:
+  itemStock:
+    - !append
+      $instances:
+        - { quality: Uncommon }
+        - { quality: Rare }
+      generationPrereqs:
+        - LootPrereqs.$(quality)CWLevelAvailabilityAtVendor
+      item: DollChip.DollChip$(quality)
+      quantity:
+        - Vendors.Always_Present
+
+# ------------------------------------------------------------------------------
+# Heywood: Wellsprings (Santiago Molina)
+# Tier 2 (Uncommon) to Tier 4 (Epic)
+# ------------------------------------------------------------------------------
+Vendors.hey_spr_ripperdoc_01:
+  itemStock:
+    - !append
+      $instances:
+        - { quality: Uncommon }
+        - { quality: Rare }
+        - { quality: Epic }
+      generationPrereqs:
+        - LootPrereqs.$(quality)CWLevelAvailabilityAtVendor
+      item: DollChip.DollChip$(quality)
+      quantity:
+        - Vendors.Always_Present
+
+# ------------------------------------------------------------------------------
+# City Center: Downtown (Darius Clarke)
+# Dogtown: EBM Petrochem Stadium
+# Top-tier stock: Rare, Epic, and Legendary
+# ------------------------------------------------------------------------------
+Vendors.$(vendor):
+  $instances:
+    - { vendor: cct_dtn_ripdoc_01 }
+    - { vendor: cz_stadium_ripperdoc_01 }
+  itemStock:
+    - !append
+      $instances:
+        - { quality: Rare }
+        - { quality: Epic }
+        - { quality: Legendary }
+      generationPrereqs:
+        - LootPrereqs.$(quality)CWLevelAvailabilityAtVendor
+      item: DollChip.DollChip$(quality)
+      quantity:
+        - Vendors.Always_Present

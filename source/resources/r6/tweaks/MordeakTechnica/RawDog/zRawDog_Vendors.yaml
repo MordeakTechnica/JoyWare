@@ -1,0 +1,112 @@
+# ==============================================================================
+# RawDog Vendor Distribution by District (Lore-Accurate Crooked/Black-Market Ripperdocs)
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# Westbrook: Japantown (Fingers / Finn Gerstatt)
+# Lowest quality only (Common & CommonPlus) - ALWAYS available regardless of player level!
+# ------------------------------------------------------------------------------
+Vendors.wbr_jpn_ripperdoc_02:
+  itemStock:
+    - !append
+      $instances:
+        - { quality: Common }
+        - { quality: CommonPlus }
+      item: RawDog.RawDog$(quality)
+      quantity:
+        - Vendors.Always_Present
+
+# ------------------------------------------------------------------------------
+# Watson: Kabuki (Charles Bucks - Scavenger Chop-Shop Partner)
+# Pacifica: West Wind Estate (Rony LaFleur - Lawless Combat Zone)
+# Low-tier districts: Common (always available at any level) & Uncommon (level unlocked)
+# ------------------------------------------------------------------------------
+Vendors.$(vendor):
+  $instances:
+    - { vendor: wat_kab_ripperdoc_02 } # Charles Bucks (Watson - Kabuki Scav Doctor)
+    - { vendor: pac_wwd_ripperdoc_01 } # Rony LaFleur (Pacifica - West Wind Estate)
+  itemStock:
+    - !append
+      item: RawDog.RawDogCommon
+      quantity:
+        - Vendors.Always_Present
+    - !append
+      generationPrereqs:
+        - LootPrereqs.UncommonCWLevelAvailabilityAtVendor
+      item: RawDog.RawDogUncommon
+      quantity:
+        - Vendors.Always_Present
+
+# ------------------------------------------------------------------------------
+# Badlands: Nomad Outskirts (Hutch Spindler)
+# Frontier salvage: Common (always available at any level), Uncommon & Rare (level unlocked)
+# ------------------------------------------------------------------------------
+Vendors.bls_ina_se1_ripperdoc_01: # Hutch Spindler (Badlands - Rocky Ridge / Outskirts)
+  itemStock:
+    - !append
+      item: RawDog.RawDogCommon
+      quantity:
+        - Vendors.Always_Present
+    - !append
+      $instances:
+        - { quality: Uncommon }
+        - { quality: Rare }
+      generationPrereqs:
+        - LootPrereqs.$(quality)CWLevelAvailabilityAtVendor
+      item: RawDog.RawDog$(quality)
+      quantity:
+        - Vendors.Always_Present
+
+# ------------------------------------------------------------------------------
+# Santo Domingo: Arroyo (Rafael Pérez - 6th Street Industrial Turf)
+# Industrial blue-collar district: Tier 2 (Uncommon) to Tier 3 (Rare)
+# ------------------------------------------------------------------------------
+Vendors.std_arr_ripperdoc_01: # Rafael Pérez (Santo Domingo - Arroyo)
+  itemStock:
+    - !append
+      $instances:
+        - { quality: Uncommon }
+        - { quality: Rare }
+      generationPrereqs:
+        - LootPrereqs.$(quality)CWLevelAvailabilityAtVendor
+      item: RawDog.RawDog$(quality)
+      quantity:
+        - Vendors.Always_Present
+
+# ------------------------------------------------------------------------------
+# Heywood: Wellsprings (Santiago Molina - Valentinos Smuggled Chrome)
+# Gangland / cartel money: Tier 2 (Uncommon) to Tier 4 (Epic)
+# ------------------------------------------------------------------------------
+Vendors.hey_spr_ripperdoc_01: # Santiago Molina (Heywood - Wellsprings)
+  itemStock:
+    - !append
+      $instances:
+        - { quality: Uncommon }
+        - { quality: Rare }
+        - { quality: Epic }
+      generationPrereqs:
+        - LootPrereqs.$(quality)CWLevelAvailabilityAtVendor
+      item: RawDog.RawDog$(quality)
+      quantity:
+        - Vendors.Always_Present
+
+# ------------------------------------------------------------------------------
+# City Center: Downtown (Darius Clarke - High-End Discreet Corpo Doctor)
+# Dogtown: EBM Petrochem Stadium (Stadium Black Market Ripperdoc)
+# Top-tier wealth & black market surplus: Tier 3 (Rare) to Tier 5 (Legendary)
+# ------------------------------------------------------------------------------
+Vendors.$(vendor):
+  $instances:
+    - { vendor: cct_dtn_ripdoc_01 }       # Darius Clarke (City Center - Downtown)
+    - { vendor: cz_stadium_ripperdoc_01 } # Stadium Ripperdoc (Dogtown / Combat Zone)
+  itemStock:
+    - !append
+      $instances:
+        - { quality: Rare }
+        - { quality: Epic }
+        - { quality: Legendary }
+      generationPrereqs:
+        - LootPrereqs.$(quality)CWLevelAvailabilityAtVendor
+      item: RawDog.RawDog$(quality)
+      quantity:
+        - Vendors.Always_Present

@@ -1,0 +1,161 @@
+# ==============================================================================
+# DollChip — Operating System Slot Cyberware
+# ==============================================================================
+
+# intDisp is the Quickhack Upload Time Decrease per Intelligence point; hackSpeed is the flat tier bonus.
+$: &DollChipStats
+  - { tier: Common,            nextTier: DollChip.DollChipCommonPlus,        intDisp: 0.5, hackSpeed: 10, cyberwareCost: 5  }
+  - { tier: CommonPlus,        nextTier: DollChip.DollChipUncommon,           intDisp: 0.6, hackSpeed: 12, cyberwareCost: 5  }
+  - { tier: Uncommon,          nextTier: DollChip.DollChipUncommonPlus,       intDisp: 0.7, hackSpeed: 14, cyberwareCost: 6  }
+  - { tier: UncommonPlus,      nextTier: DollChip.DollChipRare,              intDisp: 0.8, hackSpeed: 16, cyberwareCost: 6  }
+  - { tier: Rare,              nextTier: DollChip.DollChipRarePlus,          intDisp: 0.9, hackSpeed: 18, cyberwareCost: 7  }
+  - { tier: RarePlus,          nextTier: DollChip.DollChipEpic,              intDisp: 1.0, hackSpeed: 20, cyberwareCost: 7  }
+  - { tier: Epic,              nextTier: DollChip.DollChipEpicPlus,          intDisp: 1.1, hackSpeed: 22, cyberwareCost: 8  }
+  - { tier: EpicPlus,          nextTier: DollChip.DollChipLegendary,         intDisp: 1.2, hackSpeed: 24, cyberwareCost: 8  }
+  - { tier: Legendary,         nextTier: DollChip.DollChipLegendaryPlus,     intDisp: 1.3, hackSpeed: 27, cyberwareCost: 9  }
+  - { tier: LegendaryPlus,     nextTier: DollChip.DollChipLegendaryPlusPlus, intDisp: 1.4, hackSpeed: 28, cyberwareCost: 9  }
+  - { tier: LegendaryPlusPlus, nextTier: None,                               intDisp: 1.5, hackSpeed: 30, cyberwareCost: 10 }
+# Humanity cost variant (2.0+ standard)
+Variants.DollChip$(tier)HumanityCost:
+  $instances: *DollChipStats
+  $type: gamedataRandomVariant_Record
+  weight: 1
+  statModifiers:
+    - $type: gamedataConstantStatModifier_Record
+      value: $(cyberwareCost)
+      modifierType: Additive
+      statType: BaseStats.HumanityAllocated
+  variantPrereqs:
+    - $type: gamedataStatPrereq_Record
+      comparisonType: GreaterOrEqual
+      notifyOnAnyChange: False
+      notifyOnlyOnStateFulfilled: False
+      objectToCheck: Owner
+      statType: HumanityAvailable
+      valueToCheck: 0
+      prereqClassName: StatPrereq
+      statModifiers:
+        - $type: gamedataConstantStatModifier_Record
+          value: $(cyberwareCost)
+          modifierType: Additive
+          statType: BaseStats.GenericStatPrereqValue
+
+DollChip.DollChip$(tier):
+  $instances: *DollChipStats
+  $base: Items.MordeakTechnicaBase
+  quality: Quality.$(tier)
+  displayName: LocKey#mordeak_dollchip_name
+  equipArea: EquipmentArea.SystemReplacementCW
+  cyberwareType: SystemReplacement
+  icon:
+    atlasResourcePath: mordeak\mordeak_technica\ui\mordeak_technica_icon.inkatlas
+    atlasPartName: dollchip_icon
+  variants:
+    - !append Variants.DollChip$(tier)HumanityCost
+  nextUpgradeItem: $(nextTier)
+  OnEquip:
+    - !append
+      $type: gamedataGameplayLogicPackage_Record
+      stats:
+        - $type: gamedataConstantStatModifier_Record
+          modifierType: Additive
+          statType: BaseStats.QuickHackUploadTimeDecrease
+          value: $(hackSpeed)
+      UIData:
+        $type: gamedataGameplayLogicPackageUIData_Record
+        localizedDescription: LocKey#mordeak_dollchip_description
+        floatValues: [$(hackSpeed)]
+        stats:
+          - BaseStats.QuickHackUploadTimeDecrease
+    - !append
+      $type: gamedataGameplayLogicPackage_Record
+      UIData:
+        $type: gamedataGameplayLogicPackageUIData_Record
+        iconPath: UIIcon.Intelligence
+        localizedName: LocKey#mordeak_attunement_intelligence
+        localizedDescription: LocKey#mordeak_dollchip_attunement
+        floatValues: [$(intDisp)]
+        stats:
+          - BaseStats.AttunementHelper
+    - !append
+      $type: gamedataGameplayLogicPackage_Record
+      UIData:
+        $type: gamedataGameplayLogicPackageUIData_Record
+        localizedDescription: LocKey#mordeak_dollchip_flavor
+  # Item-level scaling drives the effect and the AttunementHelper current-total display.
+  statModifiers:
+    - !append
+      $type: gamedataCombinedStatModifier_Record
+      opSymbol: '*'
+      refObject: Player
+      refStat: BaseStats.Intelligence
+      statType: BaseStats.QuickHackUploadTimeDecrease
+      modifierType: Additive
+      value: $(intDisp)
+    - !append
+      $type: gamedataCombinedStatModifier_Record
+      opSymbol: '*'
+      refObject: Player
+      refStat: BaseStats.Intelligence
+      statType: BaseStats.AttunementHelper
+      modifierType: Additive
+      value: $(intDisp)
+  tags: ['Cyberware', 'HideInBackpackUI', 'MordeakTechnica.DollChip']
+
+# Keep the unsuffixed item ID aligned with the Common tier for legacy references.
+DollChip.DollChip:
+  $base: Items.MordeakTechnicaBase
+  quality: Quality.Common
+  displayName: LocKey#mordeak_dollchip_name
+  equipArea: EquipmentArea.SystemReplacementCW
+  cyberwareType: SystemReplacement
+  variants:
+    - !append Variants.DollChipCommonHumanityCost
+  nextUpgradeItem: DollChip.DollChipCommonPlus
+  OnEquip:
+    - !append
+      $type: gamedataGameplayLogicPackage_Record
+      stats:
+        - $type: gamedataConstantStatModifier_Record
+          modifierType: Additive
+          statType: BaseStats.QuickHackUploadTimeDecrease
+          value: 10
+      UIData:
+        $type: gamedataGameplayLogicPackageUIData_Record
+        localizedDescription: LocKey#mordeak_dollchip_description
+        floatValues: [10]
+        stats:
+          - BaseStats.QuickHackUploadTimeDecrease
+    - !append
+      $type: gamedataGameplayLogicPackage_Record
+      UIData:
+        $type: gamedataGameplayLogicPackageUIData_Record
+        iconPath: UIIcon.Intelligence
+        localizedName: LocKey#mordeak_attunement_intelligence
+        localizedDescription: LocKey#mordeak_dollchip_attunement
+        floatValues: [0.5]
+        stats:
+          - BaseStats.AttunementHelper
+    - !append
+      $type: gamedataGameplayLogicPackage_Record
+      UIData:
+        $type: gamedataGameplayLogicPackageUIData_Record
+        localizedDescription: LocKey#mordeak_dollchip_flavor
+  statModifiers:
+    - !append
+      $type: gamedataCombinedStatModifier_Record
+      opSymbol: '*'
+      refObject: Player
+      refStat: BaseStats.Intelligence
+      statType: BaseStats.QuickHackUploadTimeDecrease
+      modifierType: Additive
+      value: 0.5
+    - !append
+      $type: gamedataCombinedStatModifier_Record
+      opSymbol: '*'
+      refObject: Player
+      refStat: BaseStats.Intelligence
+      statType: BaseStats.AttunementHelper
+      modifierType: Additive
+      value: 0.5
+  tags: ['Cyberware', 'HideInBackpackUI', 'MordeakTechnica.DollChip']
