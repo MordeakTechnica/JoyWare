@@ -600,27 +600,23 @@ public class MordeakCyberwareHUDSystem extends ScriptableSystem {
     let sicknessCount: Int32 = MordeakCyberwareHUDSystem.GetSicknessCount(player.GetGame());
     let confidenceRate: String = MordeakCyberwareHUDSystem.FormatConfidenceRate(sicknessCount);
     let themeColor: HDRColor = MordeakCyberwareHUDSystem.GetAccentColor(player.GetGame(), 1.0);
-    let themeBackgroundColor: HDRColor = MordeakCyberwareHUDSystem.GetAccentColor(player.GetGame(), 0.16);
     this.UpdateSicknessOverlay(sicknessCount, player.GetGame());
     let infectionDetected: Bool = Equals(sicknessStatus, "AT RISK");
     let statusColor: HDRColor = themeColor;
-    let statusBackgroundColor: HDRColor = themeBackgroundColor;
     let badgeText: String = "";
     if infectionDetected {
       statusColor = MordeakCyberwareHUDSystem.GetTraumaAlertColor(player.GetGame(), 1.0);
-      statusBackgroundColor = MordeakCyberwareHUDSystem.GetTraumaAlertColor(player.GetGame(), 0.2);
       badgeText = "TRAUMA ALERT";
     } else {
       if !Equals(sicknessStatus, "CLEAN") {
         statusColor = HDRColor(1.0, 0.56, 0.08, 1.0);
-        statusBackgroundColor = HDRColor(1.0, 0.56, 0.08, 0.16);
       }
     }
 
     this.m_statusBadge.SetText(badgeText);
-    this.m_statusBadge.SetTintColor(statusColor);
+    this.m_statusBadge.SetTintColor(HDRColor(1.0, 0.0, 0.33, 1.0));
     this.m_statusBadge.SetVisible(infectionDetected);
-    this.m_statusBackground.SetTintColor(statusBackgroundColor);
+    this.m_statusBackground.SetTintColor(HDRColor(0.0, 0.0, 0.0, 1.0));
     this.m_statusBackground.SetVisible(infectionDetected);
     let themeIndex: Int32 = 0;
     while themeIndex < ArraySize(this.m_themeRectangles) {
@@ -1298,7 +1294,7 @@ public class MordeakCyberwareHUDSystem extends ScriptableSystem {
       20.0,
       184.0,
       34.0,
-      HDRColor(1.0, 0.0, 0.24, 0.16)
+      HDRColor(0.0, 0.0, 0.0, 1.0)
     );
     statusBackground.SetVisible(false);
     let statusBadge = MordeakCyberwareHUDSystem.CreateText(
@@ -1310,7 +1306,7 @@ public class MordeakCyberwareHUDSystem extends ScriptableSystem {
       184.0,
       34.0,
       17,
-      HDRColor(1.0, 0.0, 0.24, 1.0)
+      HDRColor(1.0, 0.0, 0.33, 1.0)
     );
     statusBadge.SetVisible(false);
     statusBadge.SetHAlign(inkEHorizontalAlign.Center);
