@@ -44,6 +44,17 @@ public class MordeakHUDDialogueCheckCallback extends DelayCallback {
   }
 }
 
+public class MordeakHUDHeartbeatCallback extends DelayCallback {
+  public let m_hudSystem: wref<MordeakCyberwareHUDSystem>;
+  public let m_generation: Int32;
+
+  public func Call() -> Void {
+    if IsDefined(this.m_hudSystem) {
+      this.m_hudSystem.AdvanceHeartbeat(this.m_generation);
+    }
+  }
+}
+
 public class MordeakHUDPreview {
   public let m_background: wref<inkRectangle>;
   public let m_themeRectangles: array<wref<inkRectangle>>;
@@ -53,6 +64,8 @@ public class MordeakHUDPreview {
   public let m_sicknessAccent: wref<inkRectangle>;
   public let m_sicknessValue: wref<inkText>;
   public let m_sicknessCount: wref<inkText>;
+  public let m_heartbeatWidget: wref<inkText>;
+  public let m_heartbeatSegments: array<wref<inkRectangle>>;
 
   public func Update(colorIndex: Int32, backgroundColorIndex: Int32, opacity: Int32) -> Void {
     if IsDefined(this.m_background) {
@@ -70,10 +83,11 @@ public class MordeakHUDPreview {
     i = 0;
     while i < ArraySize(this.m_themeTexts) {
       if IsDefined(this.m_themeTexts[i]) {
-        this.m_themeTexts[i].SetTintColor(MordeakCyberwareHUDSystem.GetAccentColorForIndex(colorIndex, this.m_themeTextAlphas[i]));
+        this.m_themeTexts[i].SetTintColor(MordeakCyberwareHUDSystem.GetReadableTextColorForIndex(colorIndex, this.m_themeTextAlphas[i]));
       }
       i += 1;
     }
+    MordeakCyberwareHUDSystem.ApplyHeartbeatColor(this.m_heartbeatWidget, this.m_heartbeatSegments, colorIndex);
     let accent: HDRColor = MordeakCyberwareHUDSystem.GetAccentColorForIndex(colorIndex, 1.0);
     if IsDefined(this.m_sicknessAccent) {
       this.m_sicknessAccent.SetTintColor(accent);
@@ -97,6 +111,7 @@ public class MordeakCyberwareHUDSystem extends ScriptableSystem {
   private let m_specsRight: wref<inkText>;
   private let m_itemValues: array<wref<inkText>>;
   private let m_itemAccents: array<wref<inkRectangle>>;
+  private let m_itemTierSegments: array<wref<inkRectangle>>;
   private let m_telemetryValues: array<wref<inkText>>;
   private let m_telemetryDetails: array<wref<inkText>>;
   private let m_telemetryBars: array<wref<inkRectangle>>;
@@ -109,6 +124,14 @@ public class MordeakCyberwareHUDSystem extends ScriptableSystem {
   private let m_themeTextAlphas: array<Float>;
   private let m_sicknessOverlay: array<wref<inkRectangle>>;
   private let m_logWidget: wref<inkText>;
+  private let m_heartbeatWidget: wref<inkText>;
+  private let m_heartbeatSegments: array<wref<inkRectangle>>;
+  private let m_heartbeatSamples: array<Int32>;
+  private let m_heartbeatCount: Int32;
+  private let m_heartbeatActive: Bool;
+  private let m_heartbeatAfterbeat: Bool;
+  private let m_heartbeatElapsed: Float;
+  private let m_heartbeatGeneration: Int32;
   private let m_isOpen: Bool;
   private let m_combatBlackboard: ref<IBlackboard>;
   private let m_combatListener: ref<CallbackHandle>;
@@ -250,6 +273,7 @@ public class MordeakCyberwareHUDSystem extends ScriptableSystem {
     specsRight: ref<inkText>,
     itemValues: array<wref<inkText>>,
     itemAccents: array<wref<inkRectangle>>,
+    itemTierSegments: array<wref<inkRectangle>>,
     telemetryValues: array<wref<inkText>>,
     telemetryDetails: array<wref<inkText>>,
     telemetryBars: array<wref<inkRectangle>>,
@@ -262,6 +286,8 @@ public class MordeakCyberwareHUDSystem extends ScriptableSystem {
     themeTextAlphas: array<Float>,
     sicknessOverlay: array<wref<inkRectangle>>,
     logWidget: ref<inkText>,
+    heartbeatWidget: ref<inkText>,
+    heartbeatSegments: array<wref<inkRectangle>>,
     game: GameInstance
   ) -> Void {
     this.m_canvas = canvas;
@@ -271,6 +297,7 @@ public class MordeakCyberwareHUDSystem extends ScriptableSystem {
     this.m_specsRight = specsRight;
     this.m_itemValues = itemValues;
     this.m_itemAccents = itemAccents;
+    this.m_itemTierSegments = itemTierSegments;
     this.m_telemetryValues = telemetryValues;
     this.m_telemetryDetails = telemetryDetails;
     this.m_telemetryBars = telemetryBars;
@@ -283,6 +310,14 @@ public class MordeakCyberwareHUDSystem extends ScriptableSystem {
     this.m_themeTextAlphas = themeTextAlphas;
     this.m_sicknessOverlay = sicknessOverlay;
     this.m_logWidget = logWidget;
+    this.m_heartbeatWidget = heartbeatWidget;
+    this.m_heartbeatSegments = heartbeatSegments;
+    ArrayClear(this.m_heartbeatSamples);
+    let heartbeatIndex: Int32 = 0;
+    while heartbeatIndex < ArraySize(heartbeatSegments) {
+      ArrayPush(this.m_heartbeatSamples, 0);
+      heartbeatIndex += 1;
+    }
 
     if this.m_isOpen {
       let playerSystem = GameInstance.GetPlayerSystem(game);
@@ -513,8 +548,12 @@ public class MordeakCyberwareHUDSystem extends ScriptableSystem {
       || !IsDefined(this.m_sicknessCount)
       || !IsDefined(this.m_sicknessAccent)
       || !IsDefined(this.m_logWidget)
+      || !IsDefined(this.m_heartbeatWidget)
+      || ArraySize(this.m_heartbeatSegments) != 64
+      || ArraySize(this.m_heartbeatSamples) != 64
       || ArraySize(this.m_itemValues) != 5
       || ArraySize(this.m_itemAccents) != 5
+      || ArraySize(this.m_itemTierSegments) != 55
       || ArraySize(this.m_telemetryValues) != 5
       || ArraySize(this.m_telemetryDetails) != 5
       || ArraySize(this.m_telemetryBars) != 5 {
@@ -540,6 +579,18 @@ public class MordeakCyberwareHUDSystem extends ScriptableSystem {
       let itemColor: HDRColor = MordeakCyberwareHUDSystem.GetTierColor(tiers[itemIndex]);
       this.m_itemValues[itemIndex].SetTintColor(itemColor);
       this.m_itemAccents[itemIndex].SetTintColor(itemColor);
+      let segmentIndex: Int32 = 0;
+      while segmentIndex < 11 {
+        let segment: wref<inkRectangle> = this.m_itemTierSegments[itemIndex * 11 + segmentIndex];
+        if segmentIndex < tiers[itemIndex] {
+          segment.SetTintColor(itemColor);
+          segment.SetOpacity(1.0);
+        } else {
+          segment.SetTintColor(HDRColor(0.22, 0.27, 0.34, 1.0));
+          segment.SetOpacity(0.72);
+        }
+        segmentIndex += 1;
+      }
       itemIndex += 1;
     }
     this.UpdateTelemetry(player.GetGame());
@@ -584,13 +635,16 @@ public class MordeakCyberwareHUDSystem extends ScriptableSystem {
     themeIndex = 0;
     while themeIndex < ArraySize(this.m_themeTexts) {
       this.m_themeTexts[themeIndex].SetTintColor(
-        MordeakCyberwareHUDSystem.GetAccentColor(
-          player.GetGame(),
+        MordeakCyberwareHUDSystem.GetReadableTextColorForIndex(
+          MordeakCyberwareHUDSystem.GetHudColorIndex(player.GetGame()),
           this.m_themeTextAlphas[themeIndex]
         )
       );
       themeIndex += 1;
     }
+    MordeakCyberwareHUDSystem.ApplyHeartbeatColor(
+      this.m_heartbeatWidget, this.m_heartbeatSegments, MordeakCyberwareHUDSystem.GetHudColorIndex(player.GetGame())
+    );
     this.m_specsLeft.SetText(
       "SUBJECT: V // PLAYMATE: " + MordeakCyberwareHUDSystem.FormatTier(tiers[4])
         + "\nMORDEAK UNITS: " + ToString(fittedCount) + " / 5"
@@ -608,7 +662,106 @@ public class MordeakCyberwareHUDSystem extends ScriptableSystem {
       "[SYSTEM] PlayMate monitor online.\n[NEGOTIABLE AFFECTION] Sickness: "
         + sicknessStatus + " // Confidence: " + confidenceRate
     );
+    this.UpdateHeartbeat(sicknessCount);
     this.m_canvas.SetVisible(true);
+  }
+
+  private func UpdateHeartbeat(sicknessCount: Int32) -> Void {
+    this.m_heartbeatCount = sicknessCount;
+    if sicknessCount < 0 {
+      this.m_heartbeatGeneration += 1;
+      this.m_heartbeatActive = false;
+      this.m_heartbeatAfterbeat = false;
+      this.m_heartbeatWidget.SetText(IsNegotiableAffectionAvailable() ? "PULSE // UNAVAILABLE" : "PULSE // OFFLINE");
+      let i: Int32 = 0;
+      while i < ArraySize(this.m_heartbeatSegments) {
+        this.m_heartbeatSegments[i].SetVisible(false);
+        i += 1;
+      }
+      return;
+    }
+
+    if !this.m_heartbeatActive {
+      this.m_heartbeatGeneration += 1;
+      this.m_heartbeatActive = true;
+      this.m_heartbeatAfterbeat = false;
+      this.m_heartbeatElapsed = 1.0 - ClampF(Cast<Float>(sicknessCount), 0.0, 20.0) * 0.03 - 0.1;
+      this.m_heartbeatWidget.SetText("PULSE");
+      let i: Int32 = 0;
+      while i < ArraySize(this.m_heartbeatSegments) {
+        this.m_heartbeatSamples[i] = 0;
+        this.m_heartbeatSegments[i].SetVisible(true);
+        MordeakCyberwareHUDSystem.SetHeartbeatSegment(this.m_heartbeatSegments[i], i, 0);
+        i += 1;
+      }
+      this.AdvanceHeartbeat(this.m_heartbeatGeneration);
+    }
+  }
+
+  private static func SetHeartbeatSegment(segment: wref<inkRectangle>, index: Int32, sample: Int32) -> Void {
+    let y: Float = 573.0;
+    let height: Float = 2.0;
+    if sample == 1 {
+      y = 566.0;
+      height = 9.0;
+    } else {
+      if sample == 2 {
+        height = 6.0;
+      }
+    }
+    segment.SetTranslation(Vector2(338.0 + Cast<Float>(index) * 6.0, y));
+    segment.SetSize(Vector2(6.0, height));
+  }
+
+  public func AdvanceHeartbeat(generation: Int32) -> Void {
+    if !this.m_isOpen || !this.m_heartbeatActive || generation != this.m_heartbeatGeneration {
+      return;
+    }
+    if !IsDefined(this.m_heartbeatWidget) {
+      FTLog("[MordeakTechnica] Heartbeat widget is unavailable.");
+      this.m_heartbeatActive = false;
+      return;
+    }
+
+    let delaySystem = GameInstance.GetDelaySystem(this.GetGameInstance());
+    if !IsDefined(delaySystem) {
+      FTLog("[MordeakTechnica] Cannot animate heartbeat: delay system is unavailable.");
+      this.m_heartbeatActive = false;
+      this.m_heartbeatWidget.SetText("PULSE // UNAVAILABLE");
+      let i: Int32 = 0;
+      while i < ArraySize(this.m_heartbeatSegments) {
+        this.m_heartbeatSegments[i].SetVisible(false);
+        i += 1;
+      }
+      return;
+    }
+
+    let period: Float = 1.0 - ClampF(Cast<Float>(this.m_heartbeatCount), 0.0, 20.0) * 0.03;
+    this.m_heartbeatElapsed += 0.1;
+    let sample: Int32 = 0;
+    if this.m_heartbeatElapsed + 0.0001 >= period {
+      this.m_heartbeatElapsed = ClampF(this.m_heartbeatElapsed - period, 0.0, 1.0);
+      sample = 1;
+      this.m_heartbeatAfterbeat = true;
+    } else {
+      if this.m_heartbeatAfterbeat {
+        sample = 2;
+        this.m_heartbeatAfterbeat = false;
+      }
+    }
+    let i: Int32 = 0;
+    while i < ArraySize(this.m_heartbeatSamples) - 1 {
+      this.m_heartbeatSamples[i] = this.m_heartbeatSamples[i + 1];
+      MordeakCyberwareHUDSystem.SetHeartbeatSegment(this.m_heartbeatSegments[i], i, this.m_heartbeatSamples[i]);
+      i += 1;
+    }
+    this.m_heartbeatSamples[i] = sample;
+    MordeakCyberwareHUDSystem.SetHeartbeatSegment(this.m_heartbeatSegments[i], i, sample);
+
+    let callback: ref<MordeakHUDHeartbeatCallback> = new MordeakHUDHeartbeatCallback();
+    callback.m_hudSystem = this;
+    callback.m_generation = generation;
+    delaySystem.DelayCallback(callback, 0.1, false);
   }
 
   private func UpdateTelemetry(game: GameInstance) -> Void {
@@ -688,6 +841,9 @@ public class MordeakCyberwareHUDSystem extends ScriptableSystem {
   public func Hide() -> Void {
     this.m_delayedOpenPending = false;
     this.m_delayedOpenGeneration += 1;
+    this.m_heartbeatGeneration += 1;
+    this.m_heartbeatActive = false;
+    this.m_heartbeatAfterbeat = false;
     this.m_isOpen = false;
     if IsDefined(this.m_canvas) {
       this.m_canvas.SetVisible(false);
@@ -754,15 +910,42 @@ public class MordeakCyberwareHUDSystem extends ScriptableSystem {
     return HDRColor(0.0, 0.95, 0.72, 1.0);
   }
 
+  private static func GetHudColorIndex(game: GameInstance) -> Int32 {
+    let questsSystem: ref<QuestsSystem> = GameInstance.GetQuestsSystem(game);
+    if IsDefined(questsSystem) {
+      return questsSystem.GetFact(n"mordeak_dollchip_hud_color");
+    }
+    return 1;
+  }
+
   // Read the user's selected accent color, falling back to red.
   private static func GetAccentColor(game: GameInstance, alpha: Float) -> HDRColor {
-    let questsSystem: ref<QuestsSystem> = GameInstance.GetQuestsSystem(game);
-    let colorIndex: Int32 = 1;
-    if IsDefined(questsSystem) {
-      colorIndex = questsSystem.GetFact(n"mordeak_dollchip_hud_color");
-    }
+    return MordeakCyberwareHUDSystem.GetAccentColorForIndex(MordeakCyberwareHUDSystem.GetHudColorIndex(game), alpha);
+  }
 
+  public static func GetReadableTextColorForIndex(colorIndex: Int32, alpha: Float) -> HDRColor {
+    if colorIndex == 5 {
+      return HDRColor(1.0, 1.0, 1.0, alpha);
+    }
     return MordeakCyberwareHUDSystem.GetAccentColorForIndex(colorIndex, alpha);
+  }
+
+  public static func ApplyHeartbeatColor(
+    heartbeatWidget: wref<inkText>,
+    heartbeatSegments: array<wref<inkRectangle>>,
+    colorIndex: Int32
+  ) -> Void {
+    let color: HDRColor = MordeakCyberwareHUDSystem.GetReadableTextColorForIndex(colorIndex, 0.8);
+    if IsDefined(heartbeatWidget) {
+      heartbeatWidget.SetTintColor(color);
+    }
+    let i: Int32 = 0;
+    while i < ArraySize(heartbeatSegments) {
+      if IsDefined(heartbeatSegments[i]) {
+        heartbeatSegments[i].SetTintColor(color);
+      }
+      i += 1;
+    }
   }
 
   public static func GetAccentColorForIndex(colorIndex: Int32, alpha: Float) -> HDRColor {
@@ -1006,6 +1189,93 @@ public class MordeakCyberwareHUDSystem extends ScriptableSystem {
       }
     }
 
+    let circuitColor: HDRColor = MordeakCyberwareHUDSystem.GetAccentColor(game, 0.28);
+    let circuitNodeColor: HDRColor = MordeakCyberwareHUDSystem.GetAccentColor(game, 0.42);
+    let circuitTopLeftHorizontal = MordeakCyberwareHUDSystem.CreateRectangle(
+      panel, n"MordeakHUDCircuitTopLeftHorizontal", 12.0, 12.0, 25.0, 1.0, circuitColor
+    );
+    ArrayPush(themeRectangles, circuitTopLeftHorizontal);
+    ArrayPush(themeRectangleAlphas, 0.28);
+    let circuitTopLeftVertical = MordeakCyberwareHUDSystem.CreateRectangle(
+      panel, n"MordeakHUDCircuitTopLeftVertical", 12.0, 12.0, 1.0, 25.0, circuitColor
+    );
+    ArrayPush(themeRectangles, circuitTopLeftVertical);
+    ArrayPush(themeRectangleAlphas, 0.28);
+    let circuitTopLeftBranch = MordeakCyberwareHUDSystem.CreateRectangle(
+      panel, n"MordeakHUDCircuitTopLeftBranch", 13.0, 36.0, 11.0, 1.0, circuitColor
+    );
+    ArrayPush(themeRectangles, circuitTopLeftBranch);
+    ArrayPush(themeRectangleAlphas, 0.28);
+    let circuitTopLeftNode = MordeakCyberwareHUDSystem.CreateRectangle(
+      panel, n"MordeakHUDCircuitTopLeftNode", 23.0, 34.0, 3.0, 3.0, circuitNodeColor
+    );
+    ArrayPush(themeRectangles, circuitTopLeftNode);
+    ArrayPush(themeRectangleAlphas, 0.42);
+    let circuitTopRightHorizontal = MordeakCyberwareHUDSystem.CreateRectangle(
+      panel, n"MordeakHUDCircuitTopRightHorizontal", 723.0, 12.0, 25.0, 1.0, circuitColor
+    );
+    ArrayPush(themeRectangles, circuitTopRightHorizontal);
+    ArrayPush(themeRectangleAlphas, 0.28);
+    let circuitTopRightVertical = MordeakCyberwareHUDSystem.CreateRectangle(
+      panel, n"MordeakHUDCircuitTopRightVertical", 747.0, 12.0, 1.0, 25.0, circuitColor
+    );
+    ArrayPush(themeRectangles, circuitTopRightVertical);
+    ArrayPush(themeRectangleAlphas, 0.28);
+    let circuitTopRightBranch = MordeakCyberwareHUDSystem.CreateRectangle(
+      panel, n"MordeakHUDCircuitTopRightBranch", 734.0, 36.0, 13.0, 1.0, circuitColor
+    );
+    ArrayPush(themeRectangles, circuitTopRightBranch);
+    ArrayPush(themeRectangleAlphas, 0.28);
+    let circuitTopRightNode = MordeakCyberwareHUDSystem.CreateRectangle(
+      panel, n"MordeakHUDCircuitTopRightNode", 732.0, 34.0, 3.0, 3.0, circuitNodeColor
+    );
+    ArrayPush(themeRectangles, circuitTopRightNode);
+    ArrayPush(themeRectangleAlphas, 0.42);
+    let circuitBottomLeftHorizontal = MordeakCyberwareHUDSystem.CreateRectangle(
+      panel, n"MordeakHUDCircuitBottomLeftHorizontal", 12.0, 697.0, 15.0, 1.0, circuitColor
+    );
+    ArrayPush(themeRectangles, circuitBottomLeftHorizontal);
+    ArrayPush(themeRectangleAlphas, 0.28);
+    let circuitBottomLeftVertical = MordeakCyberwareHUDSystem.CreateRectangle(
+      panel, n"MordeakHUDCircuitBottomLeftVertical", 12.0, 677.0, 1.0, 21.0, circuitColor
+    );
+    ArrayPush(themeRectangles, circuitBottomLeftVertical);
+    ArrayPush(themeRectangleAlphas, 0.28);
+    let circuitBottomLeftBranch = MordeakCyberwareHUDSystem.CreateRectangle(
+      panel, n"MordeakHUDCircuitBottomLeftBranch", 13.0, 676.0, 11.0, 1.0, circuitColor
+    );
+    ArrayPush(themeRectangles, circuitBottomLeftBranch);
+    ArrayPush(themeRectangleAlphas, 0.28);
+    let circuitBottomLeftNode = MordeakCyberwareHUDSystem.CreateRectangle(
+      panel, n"MordeakHUDCircuitBottomLeftNode", 24.0, 675.0, 3.0, 3.0, circuitNodeColor
+    );
+    ArrayPush(themeRectangles, circuitBottomLeftNode);
+    ArrayPush(themeRectangleAlphas, 0.42);
+    let circuitBottomRightHorizontal = MordeakCyberwareHUDSystem.CreateRectangle(
+      panel, n"MordeakHUDCircuitBottomRightHorizontal", 723.0, 697.0, 25.0, 1.0, circuitColor
+    );
+    ArrayPush(themeRectangles, circuitBottomRightHorizontal);
+    ArrayPush(themeRectangleAlphas, 0.28);
+    let circuitBottomRightVertical = MordeakCyberwareHUDSystem.CreateRectangle(
+      panel, n"MordeakHUDCircuitBottomRightVertical", 747.0, 677.0, 1.0, 21.0, circuitColor
+    );
+    ArrayPush(themeRectangles, circuitBottomRightVertical);
+    ArrayPush(themeRectangleAlphas, 0.28);
+    let circuitBottomRightBranch = MordeakCyberwareHUDSystem.CreateRectangle(
+      panel, n"MordeakHUDCircuitBottomRightBranch", 734.0, 677.0, 13.0, 1.0, circuitColor
+    );
+    ArrayPush(themeRectangles, circuitBottomRightBranch);
+    ArrayPush(themeRectangleAlphas, 0.28);
+    let circuitBottomRightNode = MordeakCyberwareHUDSystem.CreateRectangle(
+      panel, n"MordeakHUDCircuitBottomRightNode", 732.0, 675.0, 3.0, 3.0, circuitNodeColor
+    );
+    ArrayPush(themeRectangles, circuitBottomRightNode);
+    ArrayPush(themeRectangleAlphas, 0.42);
+
+    MordeakCyberwareHUDSystem.CreateRectangle(
+      panel, n"MordeakCyberwareHUDTitleBackground",
+      24.0, 18.0, 498.0, 38.0, HDRColor(0.02, 0.03, 0.05, 1.0)
+    );
     let title = MordeakCyberwareHUDSystem.CreateText(
       panel,
       n"MordeakCyberwareHUDTitle",
@@ -1058,6 +1328,10 @@ public class MordeakCyberwareHUDSystem extends ScriptableSystem {
     ArrayPush(themeRectangles, headerDivider);
     ArrayPush(themeRectangleAlphas, 0.45);
 
+    MordeakCyberwareHUDSystem.CreateRectangle(
+      panel, n"MordeakCyberwareHUDSpecsBackground",
+      26.0, 78.0, 708.0, 60.0, HDRColor(0.02, 0.03, 0.05, 1.0)
+    );
     let specsLeft = MordeakCyberwareHUDSystem.CreateText(
       panel,
       n"MordeakCyberwareHUDSpecsLeft",
@@ -1080,6 +1354,10 @@ public class MordeakCyberwareHUDSystem extends ScriptableSystem {
       16,
       HDRColor(0.64, 0.70, 0.81, 1.0)
     );
+    MordeakCyberwareHUDSystem.CreateRectangle(
+      panel, n"MordeakCyberwareHUDMatrixTitleBackground",
+      386.0, 146.0, 348.0, 29.0, HDRColor(0.02, 0.03, 0.05, 1.0)
+    );
     let matrixTitle = MordeakCyberwareHUDSystem.CreateText(
       panel,
       n"MordeakCyberwareHUDMatrixTitle",
@@ -1094,6 +1372,10 @@ public class MordeakCyberwareHUDSystem extends ScriptableSystem {
     ArrayPush(themeTexts, matrixTitle);
     ArrayPush(themeTextAlphas, 1.0);
 
+    MordeakCyberwareHUDSystem.CreateRectangle(
+      panel, n"MordeakCyberwareHUDTelemetryTitleBackground",
+      26.0, 146.0, 348.0, 29.0, HDRColor(0.02, 0.03, 0.05, 1.0)
+    );
     let telemetryTitle = MordeakCyberwareHUDSystem.CreateText(
       panel, n"MordeakCyberwareHUDTelemetryTitle", "RISK & YIELD TELEMETRY",
       30.0, 148.0, 340.0, 26.0, 19, HDRColor(1.0, 0.0, 0.24, 1.0)
@@ -1156,8 +1438,15 @@ public class MordeakCyberwareHUDSystem extends ScriptableSystem {
     ArrayPush(itemNames, "SMOOTH SKIN");
     ArrayPush(itemNames, "NEVERLOCK");
     ArrayPush(itemNames, "PLAYMATE");
+    let itemIcons: array<String>;
+    ArrayPush(itemIcons, "R");
+    ArrayPush(itemIcons, "V");
+    ArrayPush(itemIcons, "S");
+    ArrayPush(itemIcons, "N");
+    ArrayPush(itemIcons, "D");
     let itemValues: array<wref<inkText>>;
     let itemAccents: array<wref<inkRectangle>>;
+    let itemTierSegments: array<wref<inkRectangle>>;
     let itemIndex: Int32 = 0;
     let itemY: Float = 180.0;
     while itemIndex < ArraySize(itemNames) {
@@ -1170,6 +1459,31 @@ public class MordeakCyberwareHUDSystem extends ScriptableSystem {
         42.0,
         HDRColor(0.06, 0.08, 0.12, 0.72)
       );
+      MordeakCyberwareHUDSystem.CreateRectangle(
+        panel,
+        StringToName("MordeakCyberwareHUDItemIconBackground" + ToString(itemIndex)),
+        402.0,
+        itemY + 8.0,
+        26.0,
+        26.0,
+        HDRColor(0.02, 0.03, 0.05, 1.0)
+      );
+      let icon = MordeakCyberwareHUDSystem.CreateText(
+        panel,
+        StringToName("MordeakCyberwareHUDItemIcon" + ToString(itemIndex)),
+        itemIcons[itemIndex],
+        402.0,
+        itemY + 8.0,
+        26.0,
+        26.0,
+        19,
+        HDRColor(0.95, 0.97, 1.0, 1.0)
+      );
+      icon.SetFitToContent(false);
+      icon.SetHAlign(inkEHorizontalAlign.Center);
+      icon.SetHorizontalAlignment(textHorizontalAlignment.Center);
+      icon.SetVerticalAlignment(textVerticalAlignment.Center);
+      icon.SetFontStyle(n"Semi-Bold");
       let accent = MordeakCyberwareHUDSystem.CreateRectangle(
         panel,
         StringToName("MordeakCyberwareHUDItemAccent" + ToString(itemIndex)),
@@ -1183,13 +1497,29 @@ public class MordeakCyberwareHUDSystem extends ScriptableSystem {
         panel,
         StringToName("MordeakCyberwareHUDItemLabel" + ToString(itemIndex)),
         itemNames[itemIndex],
-        408.0,
-        itemY + 4.0,
-        164.0,
-        34.0,
+        432.0,
+        itemY + 1.0,
+        140.0,
+        24.0,
         17,
         HDRColor(0.64, 0.70, 0.81, 1.0)
       );
+      let tierSegmentIndex: Int32 = 0;
+      while tierSegmentIndex < 11 {
+        let segment = MordeakCyberwareHUDSystem.CreateRectangle(
+          panel,
+          StringToName(
+            "MordeakCyberwareHUDItemTier" + ToString(itemIndex) + "_" + ToString(tierSegmentIndex)
+          ),
+          432.0 + Cast<Float>(tierSegmentIndex) * 9.0,
+          itemY + 32.0,
+          7.0,
+          4.0,
+          HDRColor(0.22, 0.27, 0.34, 1.0)
+        );
+        ArrayPush(itemTierSegments, segment);
+        tierSegmentIndex += 1;
+      }
       let itemValue = MordeakCyberwareHUDSystem.CreateText(
         panel,
         StringToName("MordeakCyberwareHUDItemValue" + ToString(itemIndex)),
@@ -1210,6 +1540,10 @@ public class MordeakCyberwareHUDSystem extends ScriptableSystem {
     }
 
     // Add infection status and confidence values.
+    MordeakCyberwareHUDSystem.CreateRectangle(
+      panel, n"MordeakCyberwareHUDSicknessTitleBackground",
+      386.0, 428.0, 348.0, 29.0, HDRColor(0.02, 0.03, 0.05, 1.0)
+    );
     let sicknessTitle = MordeakCyberwareHUDSystem.CreateText(
       panel,
       n"MordeakCyberwareHUDSicknessTitle",
@@ -1312,6 +1646,10 @@ public class MordeakCyberwareHUDSystem extends ScriptableSystem {
     sicknessCount.SetHorizontalAlignment(textHorizontalAlignment.Right);
 
     // Add the diagnostic log and toggle hint.
+    MordeakCyberwareHUDSystem.CreateRectangle(
+      panel, n"MordeakCyberwareHUDLogTitleBackground",
+      26.0, 560.0, 166.0, 26.0, HDRColor(0.02, 0.03, 0.05, 1.0)
+    );
     let logTitle = MordeakCyberwareHUDSystem.CreateText(
       panel,
       n"MordeakCyberwareHUDLogTitle",
@@ -1321,10 +1659,55 @@ public class MordeakCyberwareHUDSystem extends ScriptableSystem {
       700.0,
       24.0,
       16,
-      HDRColor(1.0, 0.0, 0.24, 0.8)
+      HDRColor(1.0, 0.0, 0.24, 1.0)
     );
     ArrayPush(themeTexts, logTitle);
-    ArrayPush(themeTextAlphas, 0.8);
+    ArrayPush(themeTextAlphas, 1.0);
+    MordeakCyberwareHUDSystem.CreateRectangle(
+      panel, n"MordeakCyberwareHUDHeartbeatLabelBackground",
+      200.0, 562.0, 130.0, 24.0, HDRColor(0.02, 0.03, 0.05, 1.0)
+    );
+    let heartbeatWidget = MordeakCyberwareHUDSystem.CreateText(
+      panel,
+      n"MordeakCyberwareHUDHeartbeat",
+      "PULSE",
+      200.0,
+      562.0,
+      130.0,
+      24.0,
+      14,
+      HDRColor(1.0, 0.0, 0.24, 0.8)
+    );
+    heartbeatWidget.SetHAlign(inkEHorizontalAlign.Right);
+    heartbeatWidget.SetHorizontalAlignment(textHorizontalAlignment.Right);
+    MordeakCyberwareHUDSystem.CreateRectangle(
+      panel, n"MordeakCyberwareHUDHeartbeatBackground",
+      334.0, 562.0, 392.0, 24.0, HDRColor(0.02, 0.03, 0.05, 1.0)
+    );
+    let heartbeatSegments: array<wref<inkRectangle>>;
+    let heartbeatIndex: Int32 = 0;
+    while heartbeatIndex < 64 {
+      let segment = MordeakCyberwareHUDSystem.CreateRectangle(
+        panel, StringToName("MordeakCyberwareHUDHeartbeatSegment" + ToString(heartbeatIndex)),
+        338.0 + Cast<Float>(heartbeatIndex) * 6.0, 573.0, 6.0, 2.0,
+        HDRColor(1.0, 0.0, 0.24, 0.8)
+      );
+      if IsDefined(preview) {
+        let sample: Int32 = 0;
+        if heartbeatIndex % 10 == 0 {
+          sample = 1;
+        } else {
+          if heartbeatIndex % 10 == 1 {
+            sample = 2;
+          }
+        }
+        MordeakCyberwareHUDSystem.SetHeartbeatSegment(segment, heartbeatIndex, sample);
+      } else {
+        segment.SetVisible(false);
+      }
+      ArrayPush(heartbeatSegments, segment);
+      heartbeatIndex += 1;
+    }
     MordeakCyberwareHUDSystem.CreateRectangle(
       panel,
       n"MordeakCyberwareHUDLogBackground",
@@ -1364,10 +1747,11 @@ public class MordeakCyberwareHUDSystem extends ScriptableSystem {
     if IsDefined(hudSystem) {
       hudSystem.RegisterWidgets(
         canvas, statusBadge, statusBackground, specsLeft, specsRight,
-        itemValues, itemAccents, telemetryValues, telemetryDetails, telemetryBars,
+        itemValues, itemAccents, itemTierSegments,
+        telemetryValues, telemetryDetails, telemetryBars,
         sicknessValue, sicknessCount, sicknessAccent,
         themeRectangles, themeRectangleAlphas, themeTexts, themeTextAlphas,
-        sicknessOverlay, logWidget, game
+        sicknessOverlay, logWidget, heartbeatWidget, heartbeatSegments, game
       );
     } else {
       if IsDefined(preview) {
@@ -1379,6 +1763,8 @@ public class MordeakCyberwareHUDSystem extends ScriptableSystem {
         preview.m_sicknessAccent = sicknessAccent;
         preview.m_sicknessValue = sicknessValue;
         preview.m_sicknessCount = sicknessCount;
+        preview.m_heartbeatWidget = heartbeatWidget;
+        preview.m_heartbeatSegments = heartbeatSegments;
         specsLeft.SetText("SUBJECT: V // PLAYMATE: COMMON\nMORDEAK UNITS: 1 / 5");
         specsRight.SetText("NEURO-LINK: ONLINE\nINFECTION SEVERITY: N/A");
         logWidget.SetText("[SYSTEM] PlayMate monitor online.\n[NEGOTIABLE AFFECTION] Sickness: CLEAN // Confidence: N/A");
@@ -1390,6 +1776,18 @@ public class MordeakCyberwareHUDSystem extends ScriptableSystem {
           itemValues[previewIndex].SetText(MordeakCyberwareHUDSystem.FormatTier(previewTier));
           itemValues[previewIndex].SetTintColor(previewColor);
           itemAccents[previewIndex].SetTintColor(previewColor);
+          let previewSegmentIndex: Int32 = 0;
+          while previewSegmentIndex < 11 {
+            let segment: wref<inkRectangle> = itemTierSegments[previewIndex * 11 + previewSegmentIndex];
+            if previewSegmentIndex < previewTier {
+              segment.SetTintColor(previewColor);
+              segment.SetOpacity(1.0);
+            } else {
+              segment.SetTintColor(HDRColor(0.22, 0.27, 0.34, 1.0));
+              segment.SetOpacity(0.72);
+            }
+            previewSegmentIndex += 1;
+          }
           previewIndex += 1;
         }
         let previewValues: array<String> = ["50%", "10-30%", "40%", "35%", "+0%"];
