@@ -8,6 +8,7 @@ public class MordeakDollChipSettingsProvider extends DVRCF_Provider {
   private let m_hudColor: Int32;
   private let m_backgroundColor: Int32;
   private let m_backgroundOpacity: Int32;
+  private let m_hudToggleKey: Int32;
 
   public func OnPickerOpen(ctx: ref<DVRCF_PickerContext>) -> Bool {
     if ctx.pregame {
@@ -32,7 +33,9 @@ public class MordeakDollChipSettingsProvider extends DVRCF_Provider {
       .Dropdown("background_color", "Background Color", colors)
         .Tip("Choose the main HUD background color.")
       .Stepper("background_opacity", "Background Opacity (%)", 0.0, 100.0, 1.0, true)
-        .Tip("Set the main HUD background opacity. 0 is transparent and 100 is opaque.");
+        .Tip("Set the main HUD background opacity. 0 is transparent and 100 is opaque.")
+      .Keybind("MordeakCyberwareHUDToggle", "HUD Toggle Key")
+        .Tip("Choose the key used to show or hide the DollChip HUD.");
     return b.Build();
   }
 
@@ -45,6 +48,9 @@ public class MordeakDollChipSettingsProvider extends DVRCF_Provider {
     }
     if Equals(key, "background_opacity") {
       return this.m_backgroundOpacity;
+    }
+    if Equals(key, "MordeakCyberwareHUDToggle") {
+      return this.m_hudToggleKey;
     }
     return 0;
   }
@@ -70,6 +76,11 @@ public class MordeakDollChipSettingsProvider extends DVRCF_Provider {
       if IsDefined(questsSystem) {
         questsSystem.SetFact(n"mordeak_dollchip_hud_opacity", this.m_backgroundOpacity + 1);
       }
+      return;
+    }
+    if Equals(key, "MordeakCyberwareHUDToggle") {
+      this.m_hudToggleKey = value;
+      DVRCF_Hotkeys.PushKey(key, value);
     }
   }
 
@@ -93,6 +104,7 @@ public class MordeakDollChipSettingsProvider extends DVRCF_Provider {
 
   public func InitializeFromFacts(game: GameInstance) -> Void {
     this.m_game = game;
+    this.m_hudToggleKey = EnumInt(EInputKey.IK_Y);
     let questsSystem: ref<QuestsSystem> = GameInstance.GetQuestsSystem(game);
     if !IsDefined(questsSystem) {
       this.m_hudColor = 0;

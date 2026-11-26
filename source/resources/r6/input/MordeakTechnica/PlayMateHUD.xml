@@ -25,6 +25,6 @@
     </acceptedEvents>
 
     <mapping name="MordeakCyberwareHUDToggle" type="Button">
-        <button id="IK_Y" />
+        <button id="IK_Y" overridableUI="MordeakCyberwareHUDToggle" />
     </mapping>
 </bindings>

@@ -1311,7 +1311,7 @@ public class MordeakCyberwareHUDSystem extends ScriptableSystem {
     sicknessCount.SetHAlign(inkEHorizontalAlign.Right);
     sicknessCount.SetHorizontalAlignment(textHorizontalAlignment.Right);
 
-    // Add the diagnostic log and the Y-key hint.
+    // Add the diagnostic log and toggle hint.
     let logTitle = MordeakCyberwareHUDSystem.CreateText(
       panel,
       n"MordeakCyberwareHUDLogTitle",
@@ -1348,7 +1348,7 @@ public class MordeakCyberwareHUDSystem extends ScriptableSystem {
     let footer = MordeakCyberwareHUDSystem.CreateText(
       panel,
       n"MordeakCyberwareHUDFooter",
-      "HUD TOGGLE // PRESS Y TO OPEN / CLOSE",
+      "HUD TOGGLE // KEY CONFIGURABLE IN SETTINGS",
       30.0,
       663.0,
       700.0,
