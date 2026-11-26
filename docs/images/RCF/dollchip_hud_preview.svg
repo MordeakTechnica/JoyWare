@@ -1,0 +1,182 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="710" viewBox="0 0 760 710">
+  <defs>
+    <linearGradient id="panel" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#10151d"/>
+      <stop offset="1" stop-color="#080b10"/>
+    </linearGradient>
+    <linearGradient id="backdrop" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#131a25"/>
+      <stop offset="1" stop-color="#07090d"/>
+    </linearGradient>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <style>
+      text { font-family: Arial, sans-serif; letter-spacing: .5px; }
+      .dim { fill: #8793a5; }
+      .muted { fill: #566273; }
+      .accent { fill: #ff174d; }
+      .small { font-size: 11px; }
+      .label { font-size: 14px; }
+    </style>
+  </defs>
+  <rect width="760" height="710" fill="url(#backdrop)"/>
+  <rect x="1" y="1" width="758" height="708" fill="url(#panel)" stroke="#ff174d" stroke-width="2"/>
+  <path d="M12 12h25M12 12v25M13 36h11M723 12h25M747 12v25M734 36h13M12 697h15M12 677v21M13 676h11M723 697h25M747 677v21M734 677h13"
+        fill="none" stroke="#ff174d" stroke-opacity=".28" stroke-width="1"/>
+  <g fill="#ff174d" fill-opacity=".42">
+    <rect x="23" y="34" width="3" height="3"/>
+    <rect x="732" y="34" width="3" height="3"/>
+    <rect x="24" y="675" width="3" height="3"/>
+    <rect x="732" y="675" width="3" height="3"/>
+  </g>
+  <path d="M28 68h704" stroke="#ff174d" stroke-opacity=".45" stroke-width="2"/>
+  <rect x="24" y="18" width="498" height="38" fill="#05080d"/>
+  <text x="28" y="43" fill="#ff174d" font-size="26" font-weight="700">DollChip / Bio-Monitor Firmware UMH</text>
+  <rect x="26" y="78" width="708" height="60" fill="#05080d"/>
+  <text x="30" y="101" fill="#a3afbf" font-size="14">
+    <tspan x="30" dy="0">SUBJECT: V // PLAYMATE: COMMON</tspan>
+    <tspan x="30" dy="22">MORDEAK UNITS: 1 / 5</tspan>
+  </text>
+  <text x="390" y="101" fill="#a3afbf" font-size="14">
+    <tspan x="390" dy="0">NEURO-LINK: ONLINE</tspan>
+    <tspan x="390" dy="22">INFECTION SEVERITY: N/A</tspan>
+  </text>
+  <rect x="386" y="146" width="348" height="29" fill="#05080d"/>
+  <text x="390" y="166" class="accent" font-size="16" font-weight="700">MORDEAK JOYWARE SUITE</text>
+  <rect x="26" y="146" width="348" height="29" fill="#05080d"/>
+  <text x="30" y="166" class="accent" font-size="16" font-weight="700">RISK &amp; YIELD TELEMETRY</text>
+
+  <g>
+    <rect x="30" y="180" width="340" height="68" fill="#101722" fill-opacity=".9"/>
+    <rect x="30" y="180" width="4" height="68" fill="#b848ff"/>
+    <text x="44" y="202" fill="#d9e1eb" font-size="14">VD RISK</text>
+    <text x="354" y="202" text-anchor="end" fill="#b848ff" font-size="15">50%</text>
+    <text x="44" y="225" class="dim small">RAW VS CARRIER | BASE 50%</text>
+    <rect x="44" y="237" width="300" height="4" fill="#333d4b"/>
+    <rect x="44" y="237" width="300" height="4" fill="#b848ff"/>
+
+    <rect x="30" y="254" width="340" height="68" fill="#101722" fill-opacity=".9"/>
+    <rect x="30" y="254" width="4" height="68" fill="#ffca16"/>
+    <text x="44" y="276" fill="#d9e1eb" font-size="14">TIP RANGE</text>
+    <text x="354" y="276" text-anchor="end" fill="#ffca16" font-size="15">10-30%</text>
+    <text x="44" y="299" class="dim small">BASE + VELVET | EXCL. CLIENT BONUS</text>
+    <rect x="44" y="311" width="300" height="4" fill="#333d4b"/>
+    <rect x="44" y="311" width="180" height="4" fill="#ffca16"/>
+
+    <rect x="30" y="328" width="340" height="68" fill="#101722" fill-opacity=".9"/>
+    <rect x="30" y="328" width="4" height="68" fill="#15d2f2"/>
+    <text x="44" y="350" fill="#d9e1eb" font-size="14">FAIL TO FIND</text>
+    <text x="354" y="350" text-anchor="end" fill="#15d2f2" font-size="15">40%</text>
+    <text x="44" y="373" class="dim small">BASE 40% | SMOOTH SKIN</text>
+    <rect x="44" y="385" width="300" height="4" fill="#333d4b"/>
+    <rect x="44" y="385" width="300" height="4" fill="#15d2f2"/>
+
+    <rect x="30" y="402" width="340" height="68" fill="#101722" fill-opacity=".9"/>
+    <rect x="30" y="402" width="4" height="68" fill="#f2334d"/>
+    <text x="44" y="424" fill="#d9e1eb" font-size="14">BAD EVENTS</text>
+    <text x="354" y="424" text-anchor="end" fill="#f2334d" font-size="15">35%</text>
+    <text x="44" y="447" class="dim small">BASE 35% - NEVERLOCK ONLY</text>
+    <rect x="44" y="459" width="300" height="4" fill="#333d4b"/>
+    <rect x="44" y="459" width="105" height="4" fill="#f2334d"/>
+
+    <rect x="30" y="476" width="340" height="68" fill="#101722" fill-opacity=".9"/>
+    <rect x="30" y="476" width="4" height="68" fill="#00e6ad"/>
+    <text x="44" y="498" fill="#d9e1eb" font-size="14">PAYOUT BONUS</text>
+    <text x="354" y="498" text-anchor="end" fill="#00e6ad" font-size="15">+0%</text>
+    <text x="44" y="521" class="dim small">ALL JOYWARE TIERS | MAX +220%</text>
+    <rect x="44" y="533" width="300" height="4" fill="#333d4b"/>
+  </g>
+
+  <g>
+    <g transform="translate(390 180)">
+      <rect width="340" height="42" fill="#101722"/>
+      <rect width="4" height="42" fill="#8b96a5"/>
+      <rect x="12" y="8" width="26" height="26" fill="#05080d"/>
+      <text x="25" y="21" text-anchor="middle" dominant-baseline="central" fill="#f2f7ff" font-size="19" font-weight="700">R</text>
+      <text x="42" y="19" fill="#c6d0dc" class="label">RAWDOG</text>
+      <g fill="#384351">
+        <rect x="42" y="32" width="7" height="4"/><rect x="51" y="32" width="7" height="4"/><rect x="60" y="32" width="7" height="4"/><rect x="69" y="32" width="7" height="4"/><rect x="78" y="32" width="7" height="4"/><rect x="87" y="32" width="7" height="4"/><rect x="96" y="32" width="7" height="4"/><rect x="105" y="32" width="7" height="4"/><rect x="114" y="32" width="7" height="4"/><rect x="123" y="32" width="7" height="4"/><rect x="132" y="32" width="7" height="4"/>
+      </g>
+      <text x="324" y="27" text-anchor="end" fill="#596575" font-size="13">NOT INSTALLED</text>
+    </g>
+    <g transform="translate(390 228)">
+      <rect width="340" height="42" fill="#101722"/>
+      <rect width="4" height="42" fill="#8b96a5"/>
+      <rect x="12" y="8" width="26" height="26" fill="#05080d"/>
+      <text x="25" y="21" text-anchor="middle" dominant-baseline="central" fill="#f2f7ff" font-size="19" font-weight="700">V</text>
+      <text x="42" y="19" fill="#c6d0dc" class="label">VELVET TOUCH</text>
+      <g fill="#384351">
+        <rect x="42" y="32" width="7" height="4"/><rect x="51" y="32" width="7" height="4"/><rect x="60" y="32" width="7" height="4"/><rect x="69" y="32" width="7" height="4"/><rect x="78" y="32" width="7" height="4"/><rect x="87" y="32" width="7" height="4"/><rect x="96" y="32" width="7" height="4"/><rect x="105" y="32" width="7" height="4"/><rect x="114" y="32" width="7" height="4"/><rect x="123" y="32" width="7" height="4"/><rect x="132" y="32" width="7" height="4"/>
+      </g>
+      <text x="324" y="27" text-anchor="end" fill="#596575" font-size="13">NOT INSTALLED</text>
+    </g>
+    <g transform="translate(390 276)">
+      <rect width="340" height="42" fill="#101722"/>
+      <rect width="4" height="42" fill="#8b96a5"/>
+      <rect x="12" y="8" width="26" height="26" fill="#05080d"/>
+      <text x="25" y="21" text-anchor="middle" dominant-baseline="central" fill="#f2f7ff" font-size="19" font-weight="700">S</text>
+      <text x="42" y="19" fill="#c6d0dc" class="label">SMOOTH SKIN</text>
+      <g fill="#384351">
+        <rect x="42" y="32" width="7" height="4"/><rect x="51" y="32" width="7" height="4"/><rect x="60" y="32" width="7" height="4"/><rect x="69" y="32" width="7" height="4"/><rect x="78" y="32" width="7" height="4"/><rect x="87" y="32" width="7" height="4"/><rect x="96" y="32" width="7" height="4"/><rect x="105" y="32" width="7" height="4"/><rect x="114" y="32" width="7" height="4"/><rect x="123" y="32" width="7" height="4"/><rect x="132" y="32" width="7" height="4"/>
+      </g>
+      <text x="324" y="27" text-anchor="end" fill="#596575" font-size="13">NOT INSTALLED</text>
+    </g>
+    <g transform="translate(390 324)">
+      <rect width="340" height="42" fill="#101722"/>
+      <rect width="4" height="42" fill="#8b96a5"/>
+      <rect x="12" y="8" width="26" height="26" fill="#05080d"/>
+      <text x="25" y="21" text-anchor="middle" dominant-baseline="central" fill="#f2f7ff" font-size="19" font-weight="700">N</text>
+      <text x="42" y="19" fill="#c6d0dc" class="label">NEVERLOCK</text>
+      <g fill="#384351">
+        <rect x="42" y="32" width="7" height="4"/><rect x="51" y="32" width="7" height="4"/><rect x="60" y="32" width="7" height="4"/><rect x="69" y="32" width="7" height="4"/><rect x="78" y="32" width="7" height="4"/><rect x="87" y="32" width="7" height="4"/><rect x="96" y="32" width="7" height="4"/><rect x="105" y="32" width="7" height="4"/><rect x="114" y="32" width="7" height="4"/><rect x="123" y="32" width="7" height="4"/><rect x="132" y="32" width="7" height="4"/>
+      </g>
+      <text x="324" y="27" text-anchor="end" fill="#596575" font-size="13">NOT INSTALLED</text>
+    </g>
+    <g transform="translate(390 372)">
+      <rect width="340" height="42" fill="#101722"/>
+      <rect width="4" height="42" fill="#e0e5ec"/>
+      <rect x="12" y="8" width="26" height="26" fill="#05080d"/>
+      <text x="25" y="21" text-anchor="middle" dominant-baseline="central" fill="#f2f7ff" font-size="19" font-weight="700">D</text>
+      <text x="42" y="19" fill="#c6d0dc" class="label">PLAYMATE</text>
+      <g fill="#e0e5ec" filter="url(#glow)">
+        <rect x="42" y="32" width="7" height="4"/>
+      </g>
+      <g fill="#384351">
+        <rect x="51" y="32" width="7" height="4"/><rect x="60" y="32" width="7" height="4"/><rect x="69" y="32" width="7" height="4"/><rect x="78" y="32" width="7" height="4"/><rect x="87" y="32" width="7" height="4"/><rect x="96" y="32" width="7" height="4"/><rect x="105" y="32" width="7" height="4"/><rect x="114" y="32" width="7" height="4"/><rect x="123" y="32" width="7" height="4"/><rect x="132" y="32" width="7" height="4"/>
+      </g>
+      <text x="324" y="27" text-anchor="end" fill="#e0e5ec" font-size="13">COMMON</text>
+    </g>
+  </g>
+
+  <rect x="386" y="428" width="348" height="29" fill="#05080d"/>
+  <text x="390" y="451" class="accent" font-size="16" font-weight="700">VITALS &gt; USER STATUS</text>
+  <rect x="390" y="462" width="340" height="42" fill="#101722"/>
+  <rect x="390" y="462" width="4" height="42" fill="#ff174d"/>
+  <text x="408" y="489" fill="#c6d0dc" font-size="14">HEALTH MONITOR</text>
+  <text x="714" y="489" text-anchor="end" fill="#ff174d" font-size="14">CLEAN</text>
+  <rect x="390" y="510" width="340" height="42" fill="#101722"/>
+  <rect x="390" y="510" width="4" height="42" fill="#ff174d" fill-opacity=".55"/>
+  <text x="408" y="537" fill="#c6d0dc" font-size="14">CONFIDENCE RATE</text>
+  <text x="714" y="537" text-anchor="end" fill="#ff174d" font-size="14">N/A</text>
+
+  <rect x="26" y="560" width="166" height="26" fill="#05080d"/>
+  <text x="30" y="579" fill="#ff174d" font-size="13" font-weight="700">DIAGNOSTIC LOG</text>
+  <rect x="200" y="562" width="130" height="24" fill="#05080d"/>
+  <text x="330" y="579" text-anchor="end" fill="#ff174d" fill-opacity=".8" font-size="13">PULSE</text>
+  <rect x="334" y="562" width="392" height="24" fill="#05080d"/>
+  <path d="M338 574h384" fill="none" stroke="#ff174d" stroke-opacity=".8" stroke-width="2"/>
+  <g fill="#ff174d" fill-opacity=".8">
+    <path d="M338 566h6v9h-6z M344 573h6v6h-6z M398 566h6v9h-6z M404 573h6v6h-6z M458 566h6v9h-6z M464 573h6v6h-6z M518 566h6v9h-6z M524 573h6v6h-6z M578 566h6v9h-6z M584 573h6v6h-6z M638 566h6v9h-6z M644 573h6v6h-6z M698 566h6v9h-6z M704 573h6v6h-6z"/>
+  </g>
+  <rect x="30" y="590" width="700" height="60" fill="#030507" fill-opacity=".8"/>
+  <text x="42" y="614" fill="#64738a" font-size="12">
+    <tspan x="42" dy="0">[SYSTEM] PlayMate monitor online.</tspan>
+    <tspan x="42" dy="19">[NEGOTIABLE AFFECTION] Sickness: CLEAN // Confidence: N/A</tspan>
+  </text>
+  <text x="30" y="679" fill="#ff174d" fill-opacity=".42" font-size="11">HUD TOGGLE // KEY CONFIGURABLE IN SETTINGS</text>
+</svg>
