@@ -18,7 +18,7 @@ DollChip awards attribute and perk points as new highest tiers are reached. The 
 
 ## DollChip HUD
 
-Equip DollChip and press **Y** by default to show or hide the HUD. The HUD displays installed Joyware tiers and, when Negotiable Affection is installed, related telemetry and sickness information. It cannot open during combat or dialogue and closes when either begins or DollChip is removed.
+Equip DollChip and press **Y** by default to show or hide the HUD. The HUD displays installed Joyware tiers and, when Negotiable Affection is installed, related telemetry and sickness information. It cannot open during combat, dialogue, or an active Negotiable Affection scene or shift, and closes when any of these begins or DollChip is removed.
 
 When infection is detected, the HUD displays a red **TRAUMA ALERT** on a black background.
 
