@@ -22,7 +22,7 @@ Equip DollChip and press **Y** by default to show or hide the HUD. The HUD displ
 
 When infection is detected, the HUD displays a red **TRAUMA ALERT** on a black background.
 
-The diagnostic log includes a scrolling pulse trace showing approximately 6.4 seconds of recent beats. It speeds up with Negotiable Affection's sickness counter, from one beat per second at zero to one every 0.4 seconds at 20 or above. It shows offline if Negotiable Affection is absent and unavailable if its sickness data cannot be read. Headings and the status summary have dark backgrounds for readability, and heading and pulse text use white when the HUD color is black. The pulse is an indicator, not a measured heart rate.
+The diagnostic log includes a scrolling pulse trace showing approximately 6.4 seconds of recent beats. It speeds up with Negotiable Affection's sickness counter, from one beat per second at zero to one every 0.4 seconds at 20 or above. It shows offline if Negotiable Affection is absent and unavailable if its sickness data cannot be read. Headings and the status summary have dark backgrounds for readability. The pulse is an indicator, not a measured heart rate.
 
 ![DollChip HUD preview](docs/images/RCF/dollchip_hud_preview.svg)
 
@@ -32,7 +32,7 @@ Open the Redscript Configuration Framework hub (default **F8**) and select **Mor
 
 | Setting | Options | Default |
 | --- | --- | --- |
-| HUD Color | Red, Yellow, Blue, Pink, Black | Red |
+| HUD Color | Red, Yellow, Blue, Pink, White | Red |
 | Background Color | Red, Yellow, Blue, Pink, Black | Black |
 | Background Opacity | 0-100%; 0 is transparent and 100 is opaque | 100% |
 | HUD Toggle Key | Choose a keyboard key | Y |

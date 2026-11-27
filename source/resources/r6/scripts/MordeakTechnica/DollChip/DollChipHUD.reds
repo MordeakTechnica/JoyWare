@@ -931,9 +931,6 @@ public class MordeakCyberwareHUDSystem extends ScriptableSystem {
   }
 
   public static func GetReadableTextColorForIndex(colorIndex: Int32, alpha: Float) -> HDRColor {
-    if colorIndex == 5 {
-      return HDRColor(1.0, 1.0, 1.0, alpha);
-    }
     return MordeakCyberwareHUDSystem.GetAccentColorForIndex(colorIndex, alpha);
   }
 
@@ -966,14 +963,14 @@ public class MordeakCyberwareHUDSystem extends ScriptableSystem {
       return HDRColor(1.0, 0.24, 0.66, alpha);
     }
     if colorIndex == 5 {
-      return HDRColor(0.0, 0.0, 0.0, alpha);
+      return HDRColor(1.0, 1.0, 1.0, alpha);
     }
 
     return HDRColor(1.0, 0.0, 0.24, alpha);
   }
 
   public static func GetBackgroundColorForIndex(colorIndex: Int32) -> HDRColor {
-    if colorIndex >= 2 && colorIndex <= 6 {
+    if colorIndex >= 2 && colorIndex <= 5 {
       return MordeakCyberwareHUDSystem.GetAccentColorForIndex(colorIndex - 1, 1.0);
     }
     return HDRColor(0.0, 0.0, 0.0, 1.0);

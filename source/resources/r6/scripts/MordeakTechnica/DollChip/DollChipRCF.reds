@@ -18,19 +18,25 @@ public class MordeakDollChipSettingsProvider extends DVRCF_Provider {
   }
 
   public func BuildSchema() -> ref<DVRCF_Schema> {
-    let colors: array<String>;
-    ArrayPush(colors, "Red");
-    ArrayPush(colors, "Yellow");
-    ArrayPush(colors, "Blue");
-    ArrayPush(colors, "Pink");
-    ArrayPush(colors, "Black");
+    let hudColors: array<String>;
+    ArrayPush(hudColors, "Red");
+    ArrayPush(hudColors, "Yellow");
+    ArrayPush(hudColors, "Blue");
+    ArrayPush(hudColors, "Pink");
+    ArrayPush(hudColors, "White");
+    let backgroundColors: array<String>;
+    ArrayPush(backgroundColors, "Red");
+    ArrayPush(backgroundColors, "Yellow");
+    ArrayPush(backgroundColors, "Blue");
+    ArrayPush(backgroundColors, "Pink");
+    ArrayPush(backgroundColors, "Black");
 
     let b: ref<DVRCF_SchemaBuilder> = DVRCF_SchemaBuilder.New("Mordeak Technica");
     b.Tab("DollChip HUD")
       .Section("DollChip HUD")
-      .Dropdown("hud_color", "HUD Color", colors)
+      .Dropdown("hud_color", "HUD Color", hudColors)
         .Tip("Choose the DollChip HUD accent color.")
-      .Dropdown("background_color", "Background Color", colors)
+      .Dropdown("background_color", "Background Color", backgroundColors)
         .Tip("Choose the main HUD background color.")
       .Stepper("background_opacity", "Background Opacity (%)", 0.0, 100.0, 1.0, true)
         .Tip("Set the main HUD background opacity. 0 is transparent and 100 is opaque.")

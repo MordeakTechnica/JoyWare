@@ -190,17 +190,17 @@ public class MordeakDollChipSettingsPopup extends DVRCF_HostedPopup {
     );
   }
 
-  private func ColorName(value: Int32) -> String {
+  private func ColorName(value: Int32, background: Bool) -> String {
     if value == 1 { return "Yellow"; }
     if value == 2 { return "Blue"; }
     if value == 3 { return "Pink"; }
-    if value == 4 { return "Black"; }
+    if value == 4 { return background ? "Black" : "White"; }
     return "Red";
   }
 
   private func RefreshValues() -> Void {
-    this.m_values[0].SetText(this.ColorName(this.m_provider.GetInt("hud_color")));
-    this.m_values[1].SetText(this.ColorName(this.m_provider.GetInt("background_color")));
+    this.m_values[0].SetText(this.ColorName(this.m_provider.GetInt("hud_color"), false));
+    this.m_values[1].SetText(this.ColorName(this.m_provider.GetInt("background_color"), true));
     this.m_values[2].SetText(IntToString(this.m_provider.GetInt("background_opacity")) + "%");
     let keyName: String = NameToString(EnumValueToName(n"EInputKey", Cast<Int64>(this.m_provider.GetInt("MordeakCyberwareHUDToggle"))));
     this.m_values[3].SetText(this.m_capturingKey ? "Press a key (Esc to cancel)" : StrReplace(keyName, "IK_", ""));
