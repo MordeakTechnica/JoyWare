@@ -167,6 +167,8 @@ public class MordeakCyberwareHUDSystem extends ScriptableSystem {
     this.OnHudBackgroundColorChanged(questsSystem.GetFact(n"mordeak_dollchip_hud_background_color"));
     this.OnHudOpacityChanged(questsSystem.GetFact(n"mordeak_dollchip_hud_opacity"));
     if IsNegotiableAffectionAvailable() {
+      questsSystem.RegisterListener(n"na_active", this, n"OnNASceneChanged");
+      questsSystem.RegisterListener(n"na_ponc_active", this, n"OnNASceneChanged");
       questsSystem.RegisterListener(n"na_sick", this, n"OnSicknessChanged");
       questsSystem.RegisterListener(n"na_sick_count", this, n"OnSicknessChanged");
       questsSystem.RegisterListener(n"na_f2find", this, n"OnSicknessChanged");
@@ -254,6 +256,13 @@ public class MordeakCyberwareHUDSystem extends ScriptableSystem {
     return true;
   }
 
+  public cb func OnNASceneChanged(value: Int32) -> Bool {
+    if value == 1 {
+      this.Hide();
+    }
+    return true;
+  }
+
   // Refresh infection data when its quest facts change.
   public cb func OnSicknessChanged(value: Int32) -> Bool {
     let playerSystem = GameInstance.GetPlayerSystem(this.GetGameInstance());
@@ -328,7 +337,7 @@ public class MordeakCyberwareHUDSystem extends ScriptableSystem {
     }
   }
 
-  private static func IsDialogueActive(player: ref<PlayerPuppet>) -> Bool {
+  private static func IsHUDRestricted(player: ref<PlayerPuppet>) -> Bool {
     let game: GameInstance = player.GetGame();
     let sceneSystem: ref<SceneSystem> = GameInstance.GetSceneSystem(game);
     let blackboardSystem = GameInstance.GetBlackboardSystem(game);
@@ -358,10 +367,12 @@ public class MordeakCyberwareHUDSystem extends ScriptableSystem {
     if IsNegotiableAffectionAvailable() {
       let questsSystem: ref<QuestsSystem> = GameInstance.GetQuestsSystem(game);
       if !IsDefined(questsSystem) {
-        FTLog("[MordeakTechnica] Cannot check Negotiable Affection dialogue: quest data is unavailable.");
+        FTLog("[MordeakTechnica] Cannot check Negotiable Affection activity: quest data is unavailable.");
         return true;
       }
-      if questsSystem.GetFact(n"na_dialogue_choice_trigger") > 0 {
+      if questsSystem.GetFact(n"na_dialogue_choice_trigger") > 0
+        || questsSystem.GetFact(n"na_active") == 1
+        || questsSystem.GetFact(n"na_ponc_active") == 1 {
         return true;
       }
     }
@@ -384,14 +395,14 @@ public class MordeakCyberwareHUDSystem extends ScriptableSystem {
       this.Hide();
       return;
     }
-    if MordeakCyberwareHUDSystem.IsDialogueActive(player) {
+    if MordeakCyberwareHUDSystem.IsHUDRestricted(player) {
       this.Hide();
       return;
     }
     this.ScheduleDialogueCheck(player, generation);
   }
 
-  // Open only when the player has DollChip equipped and is out of combat and dialogue.
+  // Open only when the player has DollChip equipped and is out of combat, dialogue, and NA scenes.
   public static func Open(player: ref<PlayerPuppet>) -> Bool {
     if !IsDefined(player) {
       return false;
@@ -402,7 +413,7 @@ public class MordeakCyberwareHUDSystem extends ScriptableSystem {
       return false;
     }
 
-    if player.IsInCombat() || MordeakCyberwareHUDSystem.IsDialogueActive(player) {
+    if player.IsInCombat() || MordeakCyberwareHUDSystem.IsHUDRestricted(player) {
       return false;
     }
 
@@ -469,7 +480,7 @@ public class MordeakCyberwareHUDSystem extends ScriptableSystem {
     this.Refresh(player);
   }
 
-  // Toggle visibility; opening still goes through the equipment, combat, and dialogue checks.
+  // Toggle visibility; opening still goes through the equipment and activity checks.
   public static func Toggle(player: ref<PlayerPuppet>) -> Bool {
     if !IsDefined(player) {
       return false;
@@ -529,7 +540,7 @@ public class MordeakCyberwareHUDSystem extends ScriptableSystem {
       return;
     }
 
-    if player.IsInCombat() || MordeakCyberwareHUDSystem.IsDialogueActive(player) {
+    if player.IsInCombat() || MordeakCyberwareHUDSystem.IsHUDRestricted(player) {
       this.Hide();
       return;
     }
